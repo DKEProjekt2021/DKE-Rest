@@ -42,7 +42,7 @@ public class DepartmentController {
             throw new DepartmentBadRequestException("Department-name should not be empty!");
         }
         if(!departmentEntity.getName().matches ("\\w+\\.?")) {
-            throw new DepartmentBadRequestException("First name in-correctly formatted!");
+            throw new DepartmentBadRequestException("First name incorrectly formatted!");
         }
         return repository.save(departmentEntity);
     }
