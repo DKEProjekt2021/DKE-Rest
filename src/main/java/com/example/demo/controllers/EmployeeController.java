@@ -119,7 +119,6 @@ public class EmployeeController {
     void deleteAllEmployees() {
         repository.deleteAll();
     }
-
     @DeleteMapping("employee/inactive/{active}")
     void deleteInactiveEmployees(@PathVariable int active) {
         if(active == 1) {
