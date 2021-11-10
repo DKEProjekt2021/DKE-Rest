@@ -22,13 +22,11 @@ public class EmployeeController {
         this.repository = repository;
     }
 
-    //gibt alle employees zurück
     @GetMapping("/employees")
     List<EmployeeEntity> all() {
         return repository.findAll();
     }
 
-    //Getter für First und Last Name
     @GetMapping("employees/firstName/{firstName}")
     List <EmployeeEntity> withFirstName(@PathVariable String firstName) {
         return repository.findByFirstName(firstName);
@@ -84,7 +82,7 @@ public class EmployeeController {
         employeeEntity.setSVNR(employeeEntity.getSVNR());
         return repository.save(employeeEntity);
     }
-    //PatchMapping = Updaten oder Put Mapping(komplett ersetzen jedes Feld wird neu angelegt)
+
     @PatchMapping("/employee/{id}")
     public EmployeeEntity patchEmployee(@PathVariable int id, @RequestBody EmployeeEntity newEmployeeData) {
         EmployeeEntity emp = repository.findById(id).orElseThrow(() -> new EmployeeRequestNotFoundException(id));
