@@ -1,26 +1,23 @@
 package com.example.demo.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 //darstellung von department aus der db
 @Entity
 @Table(name = "department")
 public class DepartmentEntity {
-    @Id
+    @Id @GeneratedValue
     @Column(name = "department_id",nullable = false)
-    private String departmentId;
+    private int departmentId;
 
     @Column(name = "name",nullable = false)
     private String name;
 
-    public String getDepartmentId() {
+    public int getDepartmentId() {
         return departmentId;
     }
 
-    public void setDepartmentId(String departmentId) {
+    public void setDepartmentId(int departmentId) {
         this.departmentId = departmentId;
     }
 
