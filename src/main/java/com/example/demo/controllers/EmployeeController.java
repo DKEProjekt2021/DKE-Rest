@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.exceptions.EmployeeBadRequestException;
 import com.example.demo.entities.EmployeeEntity;
+import com.example.demo.exceptions.EmployeeForbiddenRequest;
 import com.example.demo.exceptions.EmployeeRequestNotFoundException;
 import com.example.demo.repositories.EmployeeRepository;
 import org.springframework.http.MediaType;
@@ -15,39 +16,38 @@ import java.util.Map;
 @RestController
 public class EmployeeController {
 
-
     private final EmployeeRepository repository;
 
     EmployeeController(EmployeeRepository repository) {
         this.repository = repository;
     }
 
-    @GetMapping("/employees")
+    @GetMapping("/employee")
     List<EmployeeEntity> all() {
         return repository.findAll();
     }
 
-    @GetMapping("employees/firstName/{firstName}")
+    @GetMapping("employee/firstName/{firstName}")
     List <EmployeeEntity> withFirstName(@PathVariable String firstName) {
         return repository.findByFirstName(firstName);
     }
 
-    @GetMapping("employees/lastName/{lastName}")
+    @GetMapping("employee/lastName/{lastName}")
     List <EmployeeEntity> withLastName(@PathVariable String lastName) {
         return repository.findByLastName(lastName);
     }
 
-    @GetMapping("employees/active/{active}")
+    @GetMapping("employee/active/{active}")
     List <EmployeeEntity> areActive(@PathVariable int active) {
         return repository.findByActive(active);
     }
 
-    @GetMapping("employees/department/{department}")
+    @GetMapping("employee/department/{department}")
     List <EmployeeEntity> inDepartment(@PathVariable int department) {
         return repository.findByDepartment(department);
     }
 
-    @PostMapping("/employees")
+    @PostMapping("/employee")
     EmployeeEntity newEmployeeEntity(@RequestBody EmployeeEntity employeeEntity) {
         if(ObjectUtils.isEmpty(employeeEntity.getSVNR())) {
             throw new EmployeeBadRequestException("SVNR should not be empty!");
@@ -56,17 +56,13 @@ public class EmployeeController {
             throw new EmployeeBadRequestException("Firstname should not be empty!");
         }
         if(ObjectUtils.isEmpty(employeeEntity.getLastName())) {
-            throw new EmployeeBadRequestException("Firstname should not be empty!");
+            throw new EmployeeBadRequestException("Lastname should not be empty!");
         }
-        if(ObjectUtils.isEmpty(employeeEntity.getLastName())) {
-            throw new EmployeeBadRequestException("Firstname should not be empty!");
-        }
+
         if(ObjectUtils.isEmpty(employeeEntity.getActive())) {
             throw new EmployeeBadRequestException("Active status field should not be empty!");
         }
-        if(ObjectUtils.isEmpty(employeeEntity.getLogin_name())) {
-            throw new EmployeeBadRequestException("Active status field should not be empty!");
-        }
+
         if(ObjectUtils.isEmpty(employeeEntity.getStart_date())) {
             throw new EmployeeBadRequestException("Start date field should not be empty!");
         }
@@ -110,29 +106,29 @@ public class EmployeeController {
             emp.setEnd_date(newEmployeeData.getEnd_date());
         }
 
-
         repository.save(emp);
         return emp;
     }
 
+    @DeleteMapping("/employee/{id}")
+    void deleteEmployee(@PathVariable int id) {
+        repository.deleteById(id);
+    }
+
+    @DeleteMapping("/employee")
+    void deleteAllEmployees() {
+        repository.deleteAll();
+    }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @DeleteMapping("employee/inactive/{active}")
+    void deleteInactiveEmployees(@PathVariable int active) {
+        if(active == 1) {
+            throw new EmployeeForbiddenRequest("Active employees cannot be deleted this way!");
+        } else {
+          List requests = repository.removeByActive(active);
+        }
+    }
 
 
 
