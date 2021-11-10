@@ -3,7 +3,6 @@ package com.example.demo.controllers;
 import com.example.demo.entities.DepartmentEntity;
 import com.example.demo.entities.EmployeeEntity;
 import com.example.demo.exceptions.DepartmentBadRequestException;
-import com.example.demo.exceptions.EmployeeBadRequestException;
 import com.example.demo.exceptions.EmployeeRequestNotFoundException;
 import com.example.demo.repositories.DepartmentRepository;
 import org.springframework.util.ObjectUtils;
