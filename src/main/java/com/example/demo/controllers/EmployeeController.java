@@ -31,7 +31,6 @@ public class EmployeeController {
     List <EmployeeEntity> withFirstName(@PathVariable String firstName) {
         return repository.findByFirstName(firstName);
     }
-
     @GetMapping("employee/lastName/{lastName}")
     List <EmployeeEntity> withLastName(@PathVariable String lastName) {
         return repository.findByLastName(lastName);
