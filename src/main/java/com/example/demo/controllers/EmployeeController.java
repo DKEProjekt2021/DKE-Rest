@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
@@ -59,13 +61,13 @@ public class EmployeeController {
             throw new EmployeeBadRequestException("Firstname should not be empty!");
         }
         if(ObjectUtils.isEmpty(employeeEntity.getLastName())) {
-            throw new EmployeeBadRequestException("Firstname should not be empty!");
+            throw new EmployeeBadRequestException("Lastname should not be empty!");
         }
         if(ObjectUtils.isEmpty(employeeEntity.getActive())) {
             throw new EmployeeBadRequestException("Active status field should not be empty!");
         }
         if(ObjectUtils.isEmpty(employeeEntity.getLogin_name())) {
-            throw new EmployeeBadRequestException("Active status field should not be empty!");
+            throw new EmployeeBadRequestException("Loginname field should not be empty!");
         }
         if(ObjectUtils.isEmpty(employeeEntity.getStart_date())) {
             throw new EmployeeBadRequestException("Start date field should not be empty!");
@@ -100,6 +102,9 @@ public class EmployeeController {
             emp.setLogin_name(newEmployeeData.getLogin_name());
         }
         if(newEmployeeData.getPassword() != null) {
+          //  String password = newEmployeeData.getPassword();
+          //  String hashedPW = doHashing(password);
+          //  emp.setPassword(hashedPW);
             emp.setPassword(newEmployeeData.getPassword());
         }
         if(newEmployeeData.getStart_date() != null) {
@@ -113,6 +118,25 @@ public class EmployeeController {
 
         repository.save(emp);
         return emp;
+    }
+
+    //One way hash method for Passwords
+    public String doHashing(String password){
+        try{
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(password.getBytes());
+            byte[] resultByteArray = messageDigest.digest();
+            StringBuilder sb = new StringBuilder();
+
+            for(byte b : resultByteArray){
+                sb.append(String.format("%02x",b));
+            }
+            return sb.toString();
+
+        }catch(NoSuchAlgorithmException e){
+            e.printStackTrace();
+        }
+        return "";
     }
 
 
