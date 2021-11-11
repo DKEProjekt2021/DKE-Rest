@@ -15,7 +15,7 @@ public class EmployeeEntity {
     int employeeid;
 
     @Column(name ="svnr")
-    private int svnr;
+    private  int svnr;
     @Column(name ="active")
     private int active;
     @Column(name ="first_name")
@@ -35,7 +35,19 @@ public class EmployeeEntity {
 
     public EmployeeEntity() {
 
+
     }
+
+    public EmployeeEntity(int svnr, String firstName, String lastName, int department) {
+        this.svnr = svnr;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.department = department;
+        this.active = 1;
+        this.login_name = String.valueOf(firstName.charAt(0)) + "_" + lastName + String.valueOf(Integer.toString(svnr).substring(0,4));
+        this.password = String.valueOf(firstName.charAt(0)) + "_" + lastName + String.valueOf(Integer.toString(svnr).substring(0,4));
+    }
+
 
     public int getEmployeeid() {
         return employeeid;
@@ -115,6 +127,13 @@ public class EmployeeEntity {
 
     public void setDepartment(int department) {
         this.department = department;
+    }
+
+    public void generateStartingPassword() {
+        this.password = String.valueOf(firstName.charAt(0)) + "_" + lastName + String.valueOf(employeeid);
+    }
+    public void generateLoginName() {
+        this.login_name = String.valueOf(firstName.charAt(0)) + "_" + lastName + String.valueOf(employeeid);
     }
 
     @Override

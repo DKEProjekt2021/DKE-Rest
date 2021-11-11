@@ -3,6 +3,8 @@ package com.example.demo.controllers;
 import com.example.demo.entities.DepartmentEntity;
 import com.example.demo.entities.EmployeeEntity;
 import com.example.demo.exceptions.DepartmentBadRequestException;
+import com.example.demo.exceptions.DepartmentRequestNotFoundException;
+import com.example.demo.exceptions.EmployeeIDNotFoundException;
 import com.example.demo.exceptions.EmployeeRequestNotFoundException;
 import com.example.demo.repositories.DepartmentRepository;
 import org.springframework.util.ObjectUtils;
@@ -50,7 +52,7 @@ public class DepartmentController {
     //PatchMapping = Updaten oder Put Mapping(komplett ersetzen jedes Feld wird neu angelegt)
     @PatchMapping("/employee/{id}")
     public DepartmentEntity patchDepartment(@PathVariable int id, @RequestBody DepartmentEntity newEmployeeData) {
-        DepartmentEntity emp = repository.findById(id).orElseThrow(() -> new EmployeeRequestNotFoundException(id));
+        DepartmentEntity emp = repository.findById(id).orElseThrow(() -> new DepartmentRequestNotFoundException(id));
 
         if(newEmployeeData.getName() != null) {
             emp.setName(newEmployeeData.getName());
