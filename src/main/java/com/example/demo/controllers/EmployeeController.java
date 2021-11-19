@@ -48,6 +48,11 @@ public class EmployeeController {
         return repository.findByFirstName(firstName);
     }
 
+    @GetMapping("employee/id/{id}")
+    EmployeeEntity withId(@PathVariable int id) {
+        return repository.findById(id).orElseThrow(() -> new EmployeeIDNotFoundException("No employee with ID: ",id));
+    }
+
     @GetMapping("employee/lastName/{lastName}")
     List<EmployeeEntity> withLastName(@PathVariable String lastName) {
         List<EmployeeEntity> list = repository.findByFirstName(lastName);
@@ -104,6 +109,7 @@ public class EmployeeController {
         if (ObjectUtils.isEmpty(employeeEntity.getStart_date())) {
             throw new EmployeeBadRequestException("Start date field should not be empty!");
         }
+
         if (employeeEntity.getEnd_date().before(employeeEntity.getStart_date())) {
             throw new EmployeeBadRequestException("End date should not be before start date");
         }
@@ -111,8 +117,6 @@ public class EmployeeController {
             throw new EmployeeBadRequestException("End date can not be after today");
         }
 
-
-        employeeEntity.setSVNR(employeeEntity.getSVNR());
         employeeEntity.generateLoginName();
         employeeEntity.generateStartingPassword();
 
@@ -125,20 +129,31 @@ public class EmployeeController {
 
 
         if (newEmployeeData.getFirstName() != null) {
+            if(!newEmployeeData.getFirstName().matches("[a-zA-Z]*")) {
+                throw new EmployeeBadRequestException("First name incorrectly formatted!");
+            }
             emp.setFirstName(newEmployeeData.getFirstName());
         }
 
         if (newEmployeeData.getLastName() != null) {
+            if(!newEmployeeData.getLastName().matches("[a-zA-Z]*")) {
+                throw new EmployeeBadRequestException("Last name incorrectly formatted!");
+            }
             emp.setLastName(newEmployeeData.getLastName());
         }
+
         if (newEmployeeData.getActive() == 0 || newEmployeeData.getActive() == 1) {
             emp.setActive(newEmployeeData.getActive());
         }
+        if (newEmployeeData.getActive() != 0 && newEmployeeData.getActive() != 1) {
+            throw new EmployeeBadRequestException("Only 0 or 1 possible for input");
+        }
+
         if (newEmployeeData.getLogin_name() != null) {
             emp.setLogin_name(newEmployeeData.getLogin_name());
         }
         if (newEmployeeData.getPassword() != null) {
-            emp.setPassword(newEmployeeData.getPassword());
+            emp.setPassword(doHashing(newEmployeeData.getPassword()));
         }
         if (newEmployeeData.getStart_date() != null) {
             emp.setStart_date(newEmployeeData.getStart_date());
@@ -148,10 +163,20 @@ public class EmployeeController {
             emp.setEnd_date(newEmployeeData.getEnd_date());
         }
 
-        if(newEmployeeData.getSVNR() != 0) {
-            throw new EmployeeBadRequestException("Not allowed!");
+        if(newEmployeeData.getStart_date() != null) {
+            if(newEmployeeData.getStart_date().after(emp.getEnd_date())) {
+                throw new EmployeeBadRequestException("Start date cannot be after end date");
+            }
+        }
+        if(newEmployeeData.getEnd_date() != null) {
+            if(newEmployeeData.getEnd_date().before(emp.getStart_date())) {
+                throw new EmployeeBadRequestException("End date cannot be before start date");
+            }
         }
 
+        if(newEmployeeData.getSVNR() != 0) {
+            throw new EmployeeBadRequestException("Not allowed to change the svnr of an employee!");
+        }
         repository.save(emp);
         return emp;
     }
@@ -192,6 +217,7 @@ public class EmployeeController {
         }
         return "";
     }
+
 
 }
 

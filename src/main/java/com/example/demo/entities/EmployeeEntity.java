@@ -34,8 +34,6 @@ public class EmployeeEntity {
     private int department;
 
     public EmployeeEntity() {
-
-
     }
 
     public EmployeeEntity(int svnr, String firstName, String lastName, int department) {
