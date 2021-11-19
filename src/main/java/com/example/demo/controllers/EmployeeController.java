@@ -6,8 +6,6 @@ import com.example.demo.exceptions.EmployeeForbiddenRequest;
 import com.example.demo.exceptions.EmployeeIDNotFoundException;
 import com.example.demo.exceptions.EmployeeRequestNotFoundException;
 import com.example.demo.repositories.EmployeeRepository;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,17 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 public class EmployeeController {
@@ -55,7 +45,7 @@ public class EmployeeController {
 
     @GetMapping("employee/lastName/{lastName}")
     List<EmployeeEntity> withLastName(@PathVariable String lastName) {
-        List<EmployeeEntity> list = repository.findByFirstName(lastName);
+        List<EmployeeEntity> list = repository.findByLastName(lastName);
         if (list.isEmpty()) throw new EmployeeRequestNotFoundException("No employee with lastName: " + lastName);
         return repository.findByLastName(lastName);
     }
@@ -73,7 +63,7 @@ public class EmployeeController {
         List<EmployeeEntity> list = repository.findByDepartment(department);
         if (list.isEmpty())
             throw new EmployeeIDNotFoundException("Could not find employees for department: ", department);
-        return repository.findByActive(department);
+        return repository.findByDepartment(department);
     }
 
     @PostMapping("/employee")
@@ -110,13 +100,16 @@ public class EmployeeController {
             throw new EmployeeBadRequestException("Start date field should not be empty!");
         }
 
-        if (employeeEntity.getEnd_date().before(employeeEntity.getStart_date())) {
-            throw new EmployeeBadRequestException("End date should not be before start date");
+        if(employeeEntity.getEnd_date() != null) {
+            if (employeeEntity.getEnd_date().before(employeeEntity.getStart_date())) {
+                throw new EmployeeBadRequestException("End date should not be before start date");
+            }
         }
-        if(employeeEntity.getEnd_date().after(Date.from(Instant.now()))) {
-            throw new EmployeeBadRequestException("End date can not be after today");
+        if(employeeEntity.getEnd_date() != null) {
+            if (employeeEntity.getEnd_date().after(Date.from(Instant.now()))) {
+                throw new EmployeeBadRequestException("End date can not be after today");
+            }
         }
-
         employeeEntity.generateLoginName();
         employeeEntity.generateStartingPassword();
 
@@ -126,7 +119,6 @@ public class EmployeeController {
     @PatchMapping("/employee/{id}")
     public EmployeeEntity patchEmployee(@PathVariable int id, @RequestBody EmployeeEntity newEmployeeData) {
         EmployeeEntity emp = repository.findById(id).orElseThrow(() -> new EmployeeIDNotFoundException("Could not find employee with ID: ", id));
-
 
         if (newEmployeeData.getFirstName() != null) {
             if(!newEmployeeData.getFirstName().matches("[a-zA-Z]*")) {
@@ -147,6 +139,10 @@ public class EmployeeController {
         }
         if (newEmployeeData.getActive() != 0 && newEmployeeData.getActive() != 1) {
             throw new EmployeeBadRequestException("Only 0 or 1 possible for input");
+        }
+
+        if (newEmployeeData.getDepartment() != 0) {
+            emp.setDepartment(newEmployeeData.getDepartment());
         }
 
         if (newEmployeeData.getLogin_name() != null) {
@@ -183,8 +179,9 @@ public class EmployeeController {
 
     @DeleteMapping("/employee/{id}")
     void deleteEmployee(@PathVariable int id) {
-        repository.deleteById(id);
+       repository.deleteById(id);
     }
+
 
     @DeleteMapping("/employee")
     void deleteAllEmployees() {
@@ -197,6 +194,7 @@ public class EmployeeController {
             throw new EmployeeForbiddenRequest("Active employees cannot be deleted this way!");
         } else {
             List requests = repository.removeByActive(active);
+            if (requests.isEmpty()) throw new EmployeeRequestNotFoundException("Not found");
         }
     }
     //One way hash method for Passwords

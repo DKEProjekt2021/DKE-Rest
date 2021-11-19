@@ -11,7 +11,8 @@ import java.util.Objects;
 public class EmployeeEntity {
 
 
-    private @Id @GeneratedValue
+    private @Id @GeneratedValue(strategy  = GenerationType.AUTO, generator = "employeeid_sequence")
+    @SequenceGenerator(name = "employeeid_sequence")
     int employeeid;
 
     @Column(name ="svnr")

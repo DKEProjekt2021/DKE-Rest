@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class TargetIDNotFoundAdvice {
 
     @ResponseBody
-    @ExceptionHandler(EmployeeRequestNotFoundException.class)
+    @ExceptionHandler(TargetIDNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     String targetIDNotFoundAdviceHandler(TargetIDNotFoundException ex) {
         return ex.getMessage();

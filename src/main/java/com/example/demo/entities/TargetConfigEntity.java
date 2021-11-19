@@ -6,8 +6,9 @@ import javax.persistence.*;
 @Table(name = "targetconfig")
 public class TargetConfigEntity {
 
-    private @Id @GeneratedValue
-    int targetconfig_id;
+    private @Id @GeneratedValue(strategy  = GenerationType.AUTO, generator = "targetid_sequence")
+    @SequenceGenerator(name = "targetid_sequence")
+    int id;
 
     @Column(name ="type")
     private String type;
@@ -37,11 +38,11 @@ public class TargetConfigEntity {
 
 
     public int getTargetconfig_id() {
-        return targetconfig_id;
+        return id;
     }
 
     public void setTargetconfig_id(int targetconfig_id) {
-        this.targetconfig_id = targetconfig_id;
+        this.id = targetconfig_id;
     }
 
     public String getType() {

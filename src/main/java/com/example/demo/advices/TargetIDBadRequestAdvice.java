@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class TargetIDBadRequestAdvice {
 
     @ResponseBody
-    @ExceptionHandler(EmployeeIDNotFoundException.class)
+    @ExceptionHandler(TargetIDBadRequestException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     String targetIDBadRequestHandler(TargetIDBadRequestException ex) {
         return ex.getMessage();
