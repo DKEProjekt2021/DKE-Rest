@@ -10,6 +10,13 @@ public class DepartmentEntity {
     @Column(name = "department_id",nullable = false)
     private int departmentId;
 
+    public DepartmentEntity(int departmentId, String name) {
+        this.departmentId = departmentId;
+        this.name = name;
+    }
+
+    public DepartmentEntity(){}
+
     @Column(name = "name",nullable = false)
     private String name;
 

@@ -11,7 +11,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@RestController
 public class DepartmentController {
 
 
@@ -21,7 +21,7 @@ public class DepartmentController {
         this.repository = repository;
     }
 
-    //gibt alle employees zurück
+    //gibt alle departments zurück
     @GetMapping("/departments")
     List<DepartmentEntity> all() {
         return repository.findAll();
@@ -38,7 +38,7 @@ public class DepartmentController {
         return repository.findByDepartmentId(departmentId);
     }
 
-    @PostMapping("/employees")
+    @PostMapping("/departments")
     DepartmentEntity newDepartmentEntity(@RequestBody DepartmentEntity departmentEntity) {
         if(ObjectUtils.isEmpty(departmentEntity.getName())) {
             throw new DepartmentBadRequestException("Department-name should not be empty!");
@@ -50,7 +50,7 @@ public class DepartmentController {
     }
 
     //PatchMapping = Updaten oder Put Mapping(komplett ersetzen jedes Feld wird neu angelegt)
-    @PatchMapping("/employee/{id}")
+    @PatchMapping("/departments/{id}")
     public DepartmentEntity patchDepartment(@PathVariable int id, @RequestBody DepartmentEntity newEmployeeData) {
         DepartmentEntity emp = repository.findById(id).orElseThrow(() -> new DepartmentRequestNotFoundException(id));
 
