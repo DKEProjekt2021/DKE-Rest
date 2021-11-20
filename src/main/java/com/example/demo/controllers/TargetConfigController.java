@@ -40,6 +40,7 @@ public class TargetConfigController {
         return list;
     }
 
+
     @GetMapping("targetconfig/protocol/{protocol}")
     List<TargetConfigEntity> withProtocol(@PathVariable String protocol) {
         List<TargetConfigEntity> list =  repository.findByProtocol(protocol);
