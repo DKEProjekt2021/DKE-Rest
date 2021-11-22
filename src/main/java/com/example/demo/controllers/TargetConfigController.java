@@ -28,14 +28,14 @@ public class TargetConfigController {
 
     @GetMapping("/targetconfig/id/{id}")
     TargetConfigEntity withId(@PathVariable int id) {
-        return repository.findById(id).orElseThrow(() -> new TargetIDNotFoundException("No TargetConfig with ID: "+id));
+        return repository.findById(id).orElseThrow(() -> new TargetIDNotFoundException("No TargetConfig with ID: ",id));
     }
 
     @GetMapping("targetconfig/type/{type}")
     List<TargetConfigEntity> withType(@PathVariable String type) {
         List<TargetConfigEntity> list =  repository.findByType(type);
         if(list.isEmpty()) {
-            throw new TargetIDNotFoundException("No targetconfig found with type: " + type);
+            throw new TargetIDNotFoundException("No targetconfig found with type: " ,2);
         }
         return list;
     }
@@ -45,7 +45,7 @@ public class TargetConfigController {
     List<TargetConfigEntity> withProtocol(@PathVariable String protocol) {
         List<TargetConfigEntity> list =  repository.findByProtocol(protocol);
         if(list.isEmpty()) {
-            throw new TargetIDNotFoundException("No targetconfig found with protocol: " + protocol);
+            throw new TargetIDNotFoundException("No targetconfig found with protocol: " ,3);
         }
         return list;
     }
@@ -58,13 +58,13 @@ public class TargetConfigController {
     @DeleteMapping("targetconfig/{type}")
     void deleteByType(@PathVariable String type) {
         List requests = repository.removeByType(type);
-        if (requests.isEmpty()) throw new TargetIDNotFoundException("No target config with type: " + type);
+        if (requests.isEmpty()) throw new TargetIDNotFoundException("No target config with type: ",2);
     }
 
     @DeleteMapping("targetconfig/{protocol}")
     void deleteByProtocol(@PathVariable String protocol) {
         List requests = repository.removeByProtocol(protocol);
-        if (requests.isEmpty()) throw new TargetIDNotFoundException("No target config with protocol: " + protocol);
+        if (requests.isEmpty()) throw new TargetIDNotFoundException("No target config with protocol: " , 1);
     }
 
     @PostMapping("/targetconfig")
@@ -96,7 +96,7 @@ public class TargetConfigController {
 
     @PatchMapping("/targetconfig/{id}")
     public TargetConfigEntity patchTargetConfig(@PathVariable int id, @RequestBody TargetConfigEntity newTargetConfig) {
-        TargetConfigEntity configToUpdate = repository.findById(id).orElseThrow(() -> new TargetIDNotFoundException("Could not find target config with ID: " + id));
+        TargetConfigEntity configToUpdate = repository.findById(id).orElseThrow(() -> new TargetIDNotFoundException("Could not find target config with ID: " ,id));
 
         if(newTargetConfig.getType() != null)
         configToUpdate.setType(newTargetConfig.getType());

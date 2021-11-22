@@ -9,5 +9,5 @@ import java.util.List;
 public interface DepartmentRepository extends JpaRepository<DepartmentEntity,Integer> {
     List<DepartmentEntity> findByName(String firstName);
 
-    List<EmployeeEntity> findByDepartmentId(int departmentId);
+    List<DepartmentEntity> findByDepartmentId(int departmentId);
 }

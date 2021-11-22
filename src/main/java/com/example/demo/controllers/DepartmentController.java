@@ -29,12 +29,14 @@ public class DepartmentController {
 
     //Getter für DepartmentName
     @GetMapping("departments/name/{name}")
-    List <DepartmentEntity> withDepartmentName(@PathVariable String firstName) {
-        return repository.findByName(firstName);
+    List <DepartmentEntity> withDepartmentName(@PathVariable String name) {
+        List<DepartmentEntity> list = repository.findByName(name);
+        if (list.isEmpty()) throw new DepartmentRequestNotFoundException(3000);
+        return repository.findByName(name);
     }
     //Getter für ID
     @GetMapping("departments/{departmentId}")
-    List <EmployeeEntity> areActive(@PathVariable int departmentId) {
+    List <DepartmentEntity> areActive(@PathVariable int departmentId) {
         return repository.findByDepartmentId(departmentId);
     }
 
