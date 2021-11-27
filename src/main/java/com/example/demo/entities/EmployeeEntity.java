@@ -135,6 +135,14 @@ public class EmployeeEntity {
         this.login_name = String.valueOf(firstName.charAt(0)) + "_" + lastName + String.valueOf(employeeid);
     }
 
+
+
+
+
+
+
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

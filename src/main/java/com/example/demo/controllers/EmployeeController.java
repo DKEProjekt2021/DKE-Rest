@@ -16,7 +16,7 @@ import java.sql.Date;
 import java.time.Instant;
 import java.util.List;
 
-
+@CrossOrigin(origins = "*")
 @RestController
 public class EmployeeController {
 
