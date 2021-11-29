@@ -64,6 +64,11 @@ public class DepartmentController {
         repository.save(emp);
         return emp;
     }
+    //Deletes Department by ID
+    @DeleteMapping("/departments/{id}")
+    void deleteDepartment(@PathVariable int id) {
+        repository.deleteById(id);
+    }
 
 
 }

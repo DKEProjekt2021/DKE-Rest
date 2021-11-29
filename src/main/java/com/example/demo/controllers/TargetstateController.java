@@ -6,6 +6,7 @@ import com.example.demo.repositories.TargetstateRepository;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
+import java.util.Calendar;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -72,15 +73,22 @@ public class TargetstateController {
         if(ObjectUtils.isEmpty(targetstateEntity.getDepartmentid())) {
             throw new DepartmentBadRequestException("Department-name should not be empty!");
         }
+        java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+        targetstateEntity.setActivesince(date);
+        targetstateEntity.setLastupdated(date);
         return repository.save(targetstateEntity);
     }
 
     //PatchMapping = Updaten oder Put Mapping(komplett ersetzen jedes Feld wird neu angelegt)
-    @PatchMapping("/Targetstate/{active}")
+    @PatchMapping("/Targetstate/{id}")
     public TargetstateEntity patchTargetstate(@PathVariable int id, @RequestBody TargetstateEntity newEmployeeData) {
         TargetstateEntity emp = repository.findByTargetstateid(id);
         emp.setActive(newEmployeeData.getActive());
-
+        java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+        emp.setLastupdated(date);
+        if(emp.getActive()==1){
+            emp.setActivesince(date);
+        }
         repository.save(emp);
         return emp;
     }
@@ -98,7 +106,7 @@ public class TargetstateController {
     @DeleteMapping("Targetstate/inactive/{active}")
     void deleteInactiveTargetstates(@PathVariable int active) {
         if (active == 1) {
-            throw new EmployeeForbiddenRequest("Active employees cannot be deleted this way!");
+            throw new TargetIDBadRequestException("Active Targetstates cannot be deleted this way!");
         } else {
             List requests = repository.removeByActive(active);
         }

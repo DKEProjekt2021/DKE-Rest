@@ -36,7 +36,7 @@ public class TargetConfigController {
     List<TargetConfigEntity> withType(@PathVariable String type) {
         List<TargetConfigEntity> list =  repository.findByType(type);
         if(list.isEmpty()) {
-            throw new TargetIDNotFoundException("No targetconfig found with type: " +type);
+            throw new TargetIDNotFoundException("No targetconfig found with type: " + type);
         }
         return list;
     }

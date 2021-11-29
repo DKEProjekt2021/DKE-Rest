@@ -4,10 +4,12 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "targetconfig")
+@Table(name = "targetstate")
 public class TargetstateEntity {
 
-    private @Id @GeneratedValue
+    private @Id @GeneratedValue(strategy  = GenerationType.AUTO, generator = "targetstateid_sequence")
+    @SequenceGenerator(name = "targetstateid_sequence")
+    @Column(name ="targetstate_id")
     int targetstateid;
 
     @Column(name ="active")
