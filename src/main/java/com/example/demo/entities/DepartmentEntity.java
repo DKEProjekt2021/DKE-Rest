@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Table(name = "department")
 public class DepartmentEntity {
     @Id @GeneratedValue(strategy  = GenerationType.AUTO, generator = "departmentid_sequence")
-    @SequenceGenerator(name = "departmentid_sequence")
+    @SequenceGenerator(name = "departmentid_sequence",allocationSize=1)
     @Column(name = "department_id",nullable = false)
     private int departmentId;
 

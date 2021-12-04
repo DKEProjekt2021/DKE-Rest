@@ -1,9 +1,6 @@
 package com.example.demo.controllers;
 
-import com.example.demo.entities.EmployeeEntity;
 import com.example.demo.entities.TargetConfigEntity;
-import com.example.demo.exceptions.EmployeeBadRequestException;
-import com.example.demo.exceptions.EmployeeIDNotFoundException;
 import com.example.demo.exceptions.TargetIDBadRequestException;
 import com.example.demo.exceptions.TargetIDNotFoundException;
 import com.example.demo.repositories.TargetConfigRepository;

@@ -12,11 +12,11 @@ public class EmployeeEntity {
 
 
     private @Id @GeneratedValue(strategy  = GenerationType.AUTO, generator = "employeeid_sequence")
-    @SequenceGenerator(name = "employeeid_sequence")
+    @SequenceGenerator(name = "employeeid_sequence",allocationSize=1)
     int employeeid;
 
     @Column(name ="svnr")
-    private  int svnr;
+    private  String svnr;
     @Column(name ="active")
     private int active;
     @Column(name ="first_name")
@@ -37,14 +37,14 @@ public class EmployeeEntity {
     public EmployeeEntity() {
     }
 
-    public EmployeeEntity(int svnr, String firstName, String lastName, int department) {
+    public EmployeeEntity(String svnr, String firstName, String lastName, int department) {
         this.svnr = svnr;
         this.firstName = firstName;
         this.lastName = lastName;
         this.department = department;
         this.active = 1;
-        this.login_name = String.valueOf(firstName.charAt(0)) + "_" + lastName + String.valueOf(Integer.toString(svnr).substring(0,4));
-        this.password = String.valueOf(firstName.charAt(0)) + "_" + lastName + String.valueOf(Integer.toString(svnr).substring(0,4));
+        this.login_name = String.valueOf(firstName.charAt(0)) + "_" + lastName + svnr.substring(0,4);
+        this.password = String.valueOf(firstName.charAt(0)) + "_" + lastName + svnr.substring(0,4);
     }
 
 
@@ -56,11 +56,11 @@ public class EmployeeEntity {
         this.employeeid = employeeid;
     }
 
-    public int getSVNR() {
+    public String getSVNR() {
         return svnr;
     }
 
-    public void setSVNR(int SVNR) {
+    public void setSVNR(String SVNR) {
         this.svnr = SVNR;
     }
 

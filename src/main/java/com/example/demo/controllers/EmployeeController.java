@@ -71,7 +71,8 @@ public class EmployeeController {
         if (ObjectUtils.isEmpty(employeeEntity.getSVNR())) {
             throw new EmployeeBadRequestException("SVNR should not be empty!");
         }
-        if (Integer.toString(employeeEntity.getSVNR()).length() != 10 || !Integer.toString(employeeEntity.getSVNR()).matches("[0-9]{10}")) {
+        if (employeeEntity.getSVNR().length() != 10 || !employeeEntity.getSVNR().matches("[0-9]{10}")) {
+            System.out.println(employeeEntity.getSVNR().length());
             throw new EmployeeBadRequestException("SVNR formatted incorrectly!");
         }
 
@@ -105,11 +106,11 @@ public class EmployeeController {
                 throw new EmployeeBadRequestException("End date should not be before start date");
             }
         }
-        if(employeeEntity.getEnd_date() != null) {
-            if (employeeEntity.getEnd_date().after(Date.from(Instant.now()))) {
-                throw new EmployeeBadRequestException("End date can not be after today");
-            }
+
+        if(employeeEntity.getDepartment() == 0) {
+            throw new EmployeeBadRequestException("Department field should not be empty");
         }
+        
         employeeEntity.generateLoginName();
         employeeEntity.generateStartingPassword();
 
@@ -159,20 +160,23 @@ public class EmployeeController {
             emp.setEnd_date(newEmployeeData.getEnd_date());
         }
 
-        if(newEmployeeData.getStart_date() != null) {
+        if(newEmployeeData.getStart_date() != null && emp.getEnd_date() != null) {
             if(newEmployeeData.getStart_date().after(emp.getEnd_date())) {
                 throw new EmployeeBadRequestException("Start date cannot be after end date");
             }
         }
-        if(newEmployeeData.getEnd_date() != null) {
+        if(newEmployeeData.getEnd_date() != null && emp.getStart_date() != null) {
             if(newEmployeeData.getEnd_date().before(emp.getStart_date())) {
                 throw new EmployeeBadRequestException("End date cannot be before start date");
             }
         }
 
-        if(newEmployeeData.getSVNR() != 0) {
-            throw new EmployeeBadRequestException("Not allowed to change the svnr of an employee!");
+        if(newEmployeeData.getSVNR() != null) {
+            if (!newEmployeeData.getSVNR().isEmpty()) {
+                throw new EmployeeBadRequestException("Not allowed to change the svnr of an employee!");
+            }
         }
+
         repository.save(emp);
         return emp;
     }

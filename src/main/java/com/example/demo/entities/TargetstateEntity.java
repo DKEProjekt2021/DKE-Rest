@@ -8,7 +8,7 @@ import java.sql.Date;
 public class TargetstateEntity {
 
     private @Id @GeneratedValue(strategy  = GenerationType.AUTO, generator = "targetstateid_sequence")
-    @SequenceGenerator(name = "targetstateid_sequence")
+    @SequenceGenerator(name = "targetstateid_sequence",allocationSize=1)
     @Column(name ="targetstate_id")
     int targetstateid;
 
