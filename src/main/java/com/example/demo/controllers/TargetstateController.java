@@ -31,26 +31,26 @@ public class TargetstateController {
         return repository.findByActive(active);
     }
 
-    @GetMapping("Targetstate/targetconfig_id/{targetconfig_id}")
+    @GetMapping("Targetstate/targetconfigid/{targetconfigid}")
     TargetstateEntity withTargetstateTargetconfig_id(@PathVariable int targetconfigid) {
         return repository.findByTargetconfigid(targetconfigid);
     }
 
     //Getter für active-Feld
     @GetMapping("Targetstate/Date/last_updated/{lastupdated}")
-    List <TargetstateEntity> withTargetstateLastUpdated(@PathVariable Date lastUpdated) {
-        return repository.findByLastupdated(lastUpdated);
+    List <TargetstateEntity> withTargetstateLastUpdated(@PathVariable Date lastupdated) {
+        return repository.findByLastupdated(lastupdated);
     }
 
     //Getter für active-Feld
     @GetMapping("Targetstate/Date/active_since/{activesince}")
-    List <TargetstateEntity> withTargetstateActiveSince(@PathVariable Date activeSince) {
-        return repository.findByActivesince(activeSince);
+    List <TargetstateEntity> withTargetstateActiveSince(@PathVariable Date activesince) {
+        return repository.findByActivesince(activesince);
     }
 
     @GetMapping("Targetstate/id/{targetstateid}")
-    TargetstateEntity withTargetstateId(@PathVariable int id) {
-        return repository.findByTargetstateid(id);
+    TargetstateEntity withTargetstateId(@PathVariable int targetstateid) {
+        return repository.findByTargetstateid(targetstateid);
     }
 
     //Getter für targetConfig-Feld
@@ -94,8 +94,8 @@ public class TargetstateController {
     }
 
     @DeleteMapping("/Targetstate/{targetstateId}")
-    void deleteTargetstate(@PathVariable int targetstateid) {
-        repository.deleteById(targetstateid);
+    void deleteTargetstate(@PathVariable int targetstateId) {
+        repository.deleteById(targetstateId);
     }
 
     @DeleteMapping("/Targetstate")
