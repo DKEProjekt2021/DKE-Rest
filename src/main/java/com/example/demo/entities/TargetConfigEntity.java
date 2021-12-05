@@ -10,7 +10,6 @@ public class TargetConfigEntity {
     @SequenceGenerator(name = "targetid_sequence",allocationSize=1)
     int targetconfig_id;
 
-
     @Column(name ="type")
     private String type;
 

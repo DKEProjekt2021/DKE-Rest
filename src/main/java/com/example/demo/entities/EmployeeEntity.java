@@ -24,7 +24,7 @@ public class EmployeeEntity {
     @Column(name ="last_name")
     private String lastName;
     @Column(name ="login_name")
-    private String login_name;
+    private String loginName;
     @Column(name ="password")
     private String password;
     @Column(name ="start_date")
@@ -43,7 +43,7 @@ public class EmployeeEntity {
         this.lastName = lastName;
         this.department = department;
         this.active = 1;
-        this.login_name = String.valueOf(firstName.charAt(0)) + "_" + lastName + svnr.substring(0,4);
+        this.loginName = String.valueOf(firstName.charAt(0)) + "_" + lastName + svnr.substring(0,4);
         this.password = String.valueOf(firstName.charAt(0)) + "_" + lastName + svnr.substring(0,4);
     }
 
@@ -89,11 +89,11 @@ public class EmployeeEntity {
     }
 
     public String getLogin_name() {
-        return login_name;
+        return loginName;
     }
 
     public void setLogin_name(String login_name) {
-        this.login_name = login_name;
+        this.loginName = login_name;
     }
 
     public String getPassword() {
@@ -128,11 +128,11 @@ public class EmployeeEntity {
         this.department = department;
     }
 
-    public void generateStartingPassword() {
-        this.password = String.valueOf(firstName.charAt(0)) + "_" + lastName + String.valueOf(employeeid);
+    public void generateStartingPassword(String id) {
+        this.password = String.valueOf(firstName.charAt(0)) + "_" + lastName + id;
     }
-    public void generateLoginName() {
-        this.login_name = String.valueOf(firstName.charAt(0)) + "_" + lastName + String.valueOf(employeeid);
+    public void generateLoginName(int employeeid) {
+        this.loginName = String.valueOf(firstName.charAt(0)) + "_" + lastName + String.valueOf(employeeid);
     }
 
 

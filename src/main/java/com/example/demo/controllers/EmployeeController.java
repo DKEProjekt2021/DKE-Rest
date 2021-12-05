@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Date;
-import java.time.Instant;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -110,11 +108,17 @@ public class EmployeeController {
         if(employeeEntity.getDepartment() == 0) {
             throw new EmployeeBadRequestException("Department field should not be empty");
         }
-        
-        employeeEntity.generateLoginName();
-        employeeEntity.generateStartingPassword();
 
-        return repository.save(employeeEntity);
+        employeeEntity.generateLoginName(1);
+        employeeEntity.generateStartingPassword(Integer.toString(employeeEntity.getEmployeeid()));
+
+        //to get the password from the employee
+        EmployeeEntity emp =  repository.save(employeeEntity);
+        emp.generateStartingPassword(Integer.toString(emp.getEmployeeid()));
+        emp.setPassword(doHashing(employeeEntity.getPassword()));
+        emp.generateLoginName(emp.getEmployeeid());
+        EmployeeEntity toSave =  repository.save(emp);
+        return toSave;
     }
 
     @PatchMapping("/employee/{id}")
@@ -201,6 +205,19 @@ public class EmployeeController {
             if (requests.isEmpty()) throw new EmployeeRequestNotFoundException("Not found");
         }
     }
+
+
+
+    //functions for login
+    @GetMapping("employee/loginname/{loginName}")
+    List<EmployeeEntity> withUsername(@PathVariable String loginName) {
+        List<EmployeeEntity> list = repository.findByLoginName(loginName);
+        if (list.isEmpty())
+            throw new EmployeeRequestNotFoundException("Could not find employees with username: " + loginName);
+        return repository.findByLoginName(loginName);
+    }
+
+
     //One way hash method for Passwords
     public String doHashing(String password){
         try{
@@ -219,6 +236,11 @@ public class EmployeeController {
         }
         return "";
     }
+
+
+
+
+
 
 
 }

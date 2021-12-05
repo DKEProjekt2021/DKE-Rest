@@ -13,6 +13,7 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Intege
     List<EmployeeEntity> findByLastName(String lastName);
     List<EmployeeEntity> findByActive(int active);
     List<EmployeeEntity> findByDepartment(int department);
+    List<EmployeeEntity> findByLoginName(String login_name);
 
     @Transactional
     List<EmployeeEntity> removeByActive(int active);
