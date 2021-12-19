@@ -10,32 +10,34 @@ public class TargetConfigEntity {
     @SequenceGenerator(name = "targetid_sequence",allocationSize=1)
     int targetconfig_id;
 
-    @Column(name ="type")
-    private String type;
+    @Column(name ="check_employeeid")
+    private int checkEmployeeId;
 
-    @Column(name ="protocol")
-    private String protocol;
+    @Column(name ="check_last_name")
+    private int checkLastName;
 
-    @Column(name ="port")
-    private String port;
+    @Column(name ="check_first_name")
+    private int checkFirstName;
 
-    @Column(name ="path")
-    private String path;
+    @Column(name ="check_login_name")
+    private int checkLoginName;
 
-    @Column(name ="user")
-    private String user;
+    @Column(name ="check_password")
+    private int check_password;
 
-    @Column(name ="password")
-    private String password;
+    @Column(name ="check_start_date")
+    private int checkStartDate;
 
-    @Lob
-    @Column(name = "ssl_certificate")
-    private byte[] blob;
+    @Column(name ="check_end_date")
+    private int checkEndDate;
+
+    @Column(name ="check_SVNR")
+    private int checkSVNR;
+
 
     public TargetConfigEntity() {
 
     }
-
 
     public int getTargetconfig_id() {
         return targetconfig_id;
@@ -45,59 +47,70 @@ public class TargetConfigEntity {
         this.targetconfig_id = targetconfig_id;
     }
 
-    public String getType() {
-        return type;
+    public int getCheckEmployeeId() {
+        return checkEmployeeId;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCheckEmployeeId(int checkEmployeeId) {
+        this.checkEmployeeId = checkEmployeeId;
     }
 
-    public String getProtocol() {
-        return protocol;
+
+
+    public int getCheckLastName() {
+        return checkLastName;
     }
 
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
+    public void setCheckLastName(int checkLastName) {
+        this.checkLastName = checkLastName;
     }
 
-    public String getPort() {
-        return port;
+    public int getCheckFirstName() {
+        return checkFirstName;
     }
 
-    public void setPort(String port) {
-        this.port = port;
+    public void setCheckFirstName(int checkFirstName) {
+        this.checkFirstName = checkFirstName;
     }
 
-    public String getPath() {
-        return path;
+    public int getCheckLoginName() {
+        return checkLoginName;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setCheckLoginName(int checkLoginName) {
+        this.checkLoginName = checkLoginName;
     }
 
-    public String getUser() {
-        return user;
+    public int getCheck_password() {
+        return check_password;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setCheck_password(int check_password) {
+        this.check_password = check_password;
     }
 
-    public String getPassword() {
-        return password;
+    public int getCheckStartDate() {
+        return checkStartDate;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setCheckStartDate(int checkStartDate) {
+        this.checkStartDate = checkStartDate;
     }
 
-    public byte[] getBlob() {
-        return blob;
+    public int getCheckEndDate() {
+        return checkEndDate;
     }
 
-    public void setBlob(byte[] blob) {
-        this.blob = blob;
+    public void setCheckEndDate(int checkEndDate) {
+        this.checkEndDate = checkEndDate;
+    }
+
+
+    public int getCheckSVNR() {
+        return checkSVNR;
+    }
+
+    public void setCheckSVNR(int checkSVNR) {
+        this.checkSVNR = checkSVNR;
     }
 }

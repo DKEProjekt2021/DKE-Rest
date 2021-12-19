@@ -29,65 +29,40 @@ public class TargetConfigController {
         return repository.findById(id).orElseThrow(() -> new TargetIDNotFoundException("No TargetConfig with ID: "+id));
     }
 
-    @GetMapping("targetconfig/type/{type}")
-    List<TargetConfigEntity> withType(@PathVariable String type) {
-        List<TargetConfigEntity> list =  repository.findByType(type);
-        if(list.isEmpty()) {
-            throw new TargetIDNotFoundException("No targetconfig found with type: " + type);
-        }
-        return list;
-    }
-
-
-    @GetMapping("targetconfig/protocol/{protocol}")
-    List<TargetConfigEntity> withProtocol(@PathVariable String protocol) {
-        List<TargetConfigEntity> list =  repository.findByProtocol(protocol);
-        if(list.isEmpty()) {
-            throw new TargetIDNotFoundException("No targetconfig found with protocol: " + protocol);
-        }
-        return list;
-    }
 
     @DeleteMapping("/targetconfig")
     void deleteAllConfigs() {
         repository.deleteAll();
     }
 
-    @DeleteMapping("targetconfig/{type}")
-    void deleteByType(@PathVariable String type) {
-        List requests = repository.removeByType(type);
-        if (requests.isEmpty()) throw new TargetIDNotFoundException("No target config with type: "+ 2);
-    }
-
-    @DeleteMapping("targetconfig/{protocol}")
-    void deleteByProtocol(@PathVariable String protocol) {
-        List requests = repository.removeByProtocol(protocol);
-        if (requests.isEmpty()) throw new TargetIDNotFoundException("No target config with protocol: " + 1);
-    }
 
     @PostMapping("/targetconfig")
     TargetConfigEntity newTargetConfigEntity(@RequestBody TargetConfigEntity targetConfigEntity) {
 
-        if (ObjectUtils.isEmpty(targetConfigEntity.getType())) {
-            throw new TargetIDBadRequestException("Type should not be empty!");
-        }
-        if (ObjectUtils.isEmpty(targetConfigEntity.getProtocol())) {
-            throw new TargetIDBadRequestException("Protocol should not be empty!");
-        }
-        if (ObjectUtils.isEmpty(targetConfigEntity.getPath())) {
-            throw new TargetIDBadRequestException("Path should not be empty!");
-        }
-        if (ObjectUtils.isEmpty(targetConfigEntity.getUser())) {
-            throw new TargetIDBadRequestException("User should not be empty!");
+        if (targetConfigEntity.getCheckEmployeeId() != 0 &&  targetConfigEntity.getCheckEmployeeId() != 1) {
+            throw new TargetIDBadRequestException("This field can either be 0 or 1");
         }
 
-        if (ObjectUtils.isEmpty(targetConfigEntity.getUser())) {
-            throw new TargetIDBadRequestException("User should not be empty!");
+        if (targetConfigEntity.getCheckLastName() != 0 &&  targetConfigEntity.getCheckLastName() != 1) {
+            throw new TargetIDBadRequestException("This field can either be 0 or 1");
+        }
+        if (targetConfigEntity.getCheckFirstName() != 0 &&  targetConfigEntity.getCheckFirstName()  != 1) {
+            throw new TargetIDBadRequestException("This field can either be 0 or 1");
+        }
+        if (targetConfigEntity.getCheckLoginName() != 0 &&  targetConfigEntity.getCheckLoginName()  != 1) {
+            throw new TargetIDBadRequestException("This field can either be 0 or 1");
+        }
+        if (targetConfigEntity.getCheck_password() != 0 &&  targetConfigEntity.getCheck_password()  != 1) {
+            throw new TargetIDBadRequestException("This field can either be 0 or 1");
+        }
+        if (targetConfigEntity.getCheckStartDate() != 0 &&  targetConfigEntity.getCheckStartDate()  != 1) {
+            throw new TargetIDBadRequestException("This field can either be 0 or 1");
+        }
+        if (targetConfigEntity.getCheckEndDate() != 0 &&  targetConfigEntity.getCheckEndDate()  != 1) {
+            throw new TargetIDBadRequestException("This field can either be 0 or 1");
         }
 
-        if (ObjectUtils.isEmpty(targetConfigEntity.getPassword())) {
-            throw new TargetIDBadRequestException("Password should not be empty!");
-        }
+
 
         return repository.save(targetConfigEntity);
     }
@@ -96,29 +71,48 @@ public class TargetConfigController {
     public TargetConfigEntity patchTargetConfig(@PathVariable int id, @RequestBody TargetConfigEntity newTargetConfig) {
         TargetConfigEntity configToUpdate = repository.findById(id).orElseThrow(() -> new TargetIDNotFoundException("Could not find target config with ID: " +id));
 
-        if(newTargetConfig.getType() != null)
-        configToUpdate.setType(newTargetConfig.getType());
+        if(newTargetConfig.getCheckEmployeeId() == 0 || newTargetConfig.getCheckEmployeeId() == 1)
+            configToUpdate.setCheckEmployeeId(newTargetConfig.getCheckEmployeeId());
+        else throw new TargetIDBadRequestException("This field can only be 0 or 1");
 
-        if(newTargetConfig.getProtocol() != null)
-            configToUpdate.setProtocol(newTargetConfig.getProtocol());
+        if(newTargetConfig.getCheckFirstName() == 0 || newTargetConfig.getCheckFirstName() == 1)
+            configToUpdate.setCheckFirstName(newTargetConfig.getCheckFirstName());
+        else throw new TargetIDBadRequestException("This field can only be 0 or 1");
 
-        if(newTargetConfig.getPort() != null)
-            configToUpdate.setPort(newTargetConfig.getPort());
+        if(newTargetConfig.getCheckLastName() == 0 || newTargetConfig.getCheckLastName() == 1)
+            configToUpdate.setCheckLastName(newTargetConfig.getCheckLastName());
+        else throw new TargetIDBadRequestException("This field can only be 0 or 1");
 
-        if(newTargetConfig.getPath() != null)
-            configToUpdate.setPath(newTargetConfig.getPort());
+        if(newTargetConfig.getCheckLoginName() == 0 || newTargetConfig.getCheckLoginName() == 1)
+            configToUpdate.setCheckLoginName(newTargetConfig.getCheckLoginName());
+        else throw new TargetIDBadRequestException("This field can only be 0 or 1");
 
-        if(newTargetConfig.getUser() != null)
-            configToUpdate.setUser(newTargetConfig.getUser());
+        if(newTargetConfig.getCheck_password() == 0 || newTargetConfig.getCheck_password() == 1)
+            configToUpdate.setCheck_password(newTargetConfig.getCheck_password());
+        else throw new TargetIDBadRequestException("This field can only be 0 or 1");
 
-        if(newTargetConfig.getPassword() != null)
-            configToUpdate.setPassword(newTargetConfig.getPassword());
+        if(newTargetConfig.getCheckStartDate() == 0 || newTargetConfig.getCheckStartDate() == 1)
+            configToUpdate.setCheckStartDate(newTargetConfig.getCheckStartDate());
+        else throw new TargetIDBadRequestException("This field can only be 0 or 1");
+
+        if(newTargetConfig.getCheckEndDate() == 0 || newTargetConfig.getCheckEndDate() == 1)
+            configToUpdate.setCheckEndDate(newTargetConfig.getCheckEndDate());
+        else throw new TargetIDBadRequestException("This field can only be 0 or 1");
+
+        if(newTargetConfig.getCheckSVNR() == 0 || newTargetConfig.getCheckSVNR() == 1)
+            configToUpdate.setCheckSVNR(newTargetConfig.getCheckSVNR());
+        else throw new TargetIDBadRequestException("This field can only be 0 or 1");
+
+
 
         repository.save(configToUpdate);
         return configToUpdate;
     }
 
-
+    @DeleteMapping("/targetconfig/delete/{id}")
+    void deleteDepartment(@PathVariable int id) {
+        repository.deleteById(id);
+    }
 
 
 

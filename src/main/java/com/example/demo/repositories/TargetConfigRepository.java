@@ -9,12 +9,6 @@ import java.util.List;
 
 public interface TargetConfigRepository extends JpaRepository<TargetConfigEntity, Integer> {
 
-    List<TargetConfigEntity> findByType(String type);
-    List<TargetConfigEntity> findByProtocol(String protocol);
 
-    @Transactional
-    List<TargetConfigEntity> removeByType(String type);
-    @Transactional
-    List<TargetConfigEntity> removeByProtocol(String protocol);
 
 }

@@ -3,7 +3,9 @@ package com.example.demo.entities;
 import javax.persistence.*;
 
 import java.sql.Date;
+import java.time.Instant;
 import java.util.Objects;
+
 
 //darstellung von einem employee aus der db
 @Entity
@@ -31,20 +33,24 @@ public class EmployeeEntity {
     private  Date start_date;
     @Column(name ="end_date")
     private Date end_date;
-    @Column(name ="department")
-    private int department;
+    @Column(name ="department_id")
+    private int departmentId;
+    @Column(name ="last_changed")
+    private Instant lastChanged;
+
 
     public EmployeeEntity() {
     }
 
-    public EmployeeEntity(String svnr, String firstName, String lastName, int department) {
+    public EmployeeEntity(String svnr, String firstName, String lastName, int departmentId) {
         this.svnr = svnr;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.department = department;
+        this.departmentId = departmentId;
         this.active = 1;
         this.loginName = String.valueOf(firstName.charAt(0)) + "_" + lastName + svnr.substring(0,4);
         this.password = String.valueOf(firstName.charAt(0)) + "_" + lastName + svnr.substring(0,4);
+        this.lastChanged = Instant.now();
     }
 
 
@@ -120,12 +126,12 @@ public class EmployeeEntity {
         this.end_date = end_date;
     }
 
-    public int getDepartment() {
-        return department;
+    public int getDepartmentId() {
+        return departmentId;
     }
 
-    public void setDepartment(int department) {
-        this.department = department;
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
     }
 
     public void generateStartingPassword(String id) {
@@ -135,25 +141,25 @@ public class EmployeeEntity {
         this.loginName = String.valueOf(firstName.charAt(0)) + "_" + lastName + String.valueOf(employeeid);
     }
 
+    public Instant getLastChanged() {
+        return lastChanged;
+    }
 
-
-
-
-
-
-
+    public void setLastChanged(Instant lastChanged) {
+        this.lastChanged = lastChanged;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EmployeeEntity that = (EmployeeEntity) o;
-        return svnr == that.svnr && active == that.active && firstName.equals(that.firstName) && lastName.equals(that.lastName) && start_date.equals(that.start_date) && end_date.equals(that.end_date) && department == (that.department);
+        return svnr == that.svnr && active == that.active && firstName.equals(that.firstName) && lastName.equals(that.lastName) && start_date.equals(that.start_date) && end_date.equals(that.end_date) && departmentId == (that.departmentId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(svnr, active, firstName, lastName, start_date, end_date, department);
+        return Objects.hash(svnr, active, firstName, lastName, start_date, end_date, departmentId);
     }
 
     @Override
@@ -165,7 +171,7 @@ public class EmployeeEntity {
                 ", lastName='" + lastName + '\'' +
                 ", start_date=" + start_date +
                 ", end_date=" + end_date +
-                ", department='" + department + '\'' +
+                ", department='" + departmentId + '\'' +
                 '}';
     }
 }

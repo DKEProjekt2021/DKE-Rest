@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -56,12 +57,12 @@ public class EmployeeController {
         return repository.findByActive(active);
     }
 
-    @GetMapping("employee/department/{department}")
-    List<EmployeeEntity> inDepartment(@PathVariable int department) {
-        List<EmployeeEntity> list = repository.findByDepartment(department);
+    @GetMapping("employee/department/{department_Id}")
+    List<EmployeeEntity> inDepartment(@PathVariable int department_Id) {
+        List<EmployeeEntity> list = repository.findByDepartmentId(department_Id);
         if (list.isEmpty())
-            throw new EmployeeIDNotFoundException("Could not find employees for department: ", department);
-        return repository.findByDepartment(department);
+            throw new EmployeeIDNotFoundException("Could not find employees for department: ", department_Id);
+        return repository.findByDepartmentId(department_Id);
     }
 
     @PostMapping("/employee")
@@ -105,10 +106,8 @@ public class EmployeeController {
             }
         }
 
-        if(employeeEntity.getDepartment() == 0) {
-            throw new EmployeeBadRequestException("Department field should not be empty");
-        }
 
+        employeeEntity.setLastChanged(Instant.now());
         employeeEntity.generateLoginName(1);
         employeeEntity.generateStartingPassword(Integer.toString(employeeEntity.getEmployeeid()));
 
@@ -146,8 +145,8 @@ public class EmployeeController {
             throw new EmployeeBadRequestException("Only 0 or 1 possible for input");
         }
 
-        if (newEmployeeData.getDepartment() != 0) {
-            emp.setDepartment(newEmployeeData.getDepartment());
+        if (newEmployeeData.getDepartmentId() != 0) {
+            emp.setDepartmentId(newEmployeeData.getDepartmentId());
         }
 
         if (newEmployeeData.getLogin_name() != null) {
@@ -180,7 +179,7 @@ public class EmployeeController {
                 throw new EmployeeBadRequestException("Not allowed to change the svnr of an employee!");
             }
         }
-
+        emp.setLastChanged(Instant.now());
         repository.save(emp);
         return emp;
     }
