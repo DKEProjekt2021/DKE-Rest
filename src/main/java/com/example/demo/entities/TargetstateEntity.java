@@ -2,6 +2,7 @@ package com.example.demo.entities;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "targetstate")
@@ -15,7 +16,10 @@ public class TargetstateEntity {
     @Column(name ="active")
     private int active;
 
-    @Column(name ="targetconfig_id")
+    @Column(name ="type")
+    private Type type;
+
+    @Column(name = "targetconfig_id")
     private int targetconfigid;
 
     @Column(name ="last_updated")
@@ -24,8 +28,30 @@ public class TargetstateEntity {
     @Column(name ="active_since")
     private Date activesince;
 
+    @JoinColumn(name = "department_id")
     @Column(name ="department_id")
     private int departmentid;
+
+    @Column(name ="port")
+    private String port;
+
+    @Column(name ="path")
+    private String path;
+
+    @Column(name ="user")
+    private String user;
+
+    @Column(name ="password")
+    private String password;
+
+    @Column(name ="hostname")
+    private String hostname;
+
+    @Column(name ="tablename")
+    private String tablename;
+
+    @Column(name ="last_synced")
+    private Timestamp lastsynced;
 
 
     public TargetstateEntity() {
@@ -78,5 +104,69 @@ public class TargetstateEntity {
 
     public void setDepartmentid(int departmentid) {
         this.departmentid = departmentid;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public String getTablename() {
+        return tablename;
+    }
+
+    public void setTablename(String tablename) {
+        this.tablename = tablename;
+    }
+
+    public Timestamp getLast_synced() {
+        return lastsynced;
+    }
+
+    public void setLast_synced(Timestamp lastsynced) {
+        this.lastsynced = lastsynced;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 }
