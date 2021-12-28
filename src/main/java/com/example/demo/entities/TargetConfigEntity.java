@@ -8,7 +8,7 @@ public class TargetConfigEntity {
 
     private @Id @GeneratedValue(strategy  = GenerationType.AUTO, generator = "targetid_sequence")
     @SequenceGenerator(name = "targetid_sequence",allocationSize=1)
-    int targetconfigid;
+    int targetconfig_id;
 
     @Column(name ="check_employeeid")
     private int checkEmployeeId;
@@ -40,11 +40,11 @@ public class TargetConfigEntity {
     }
 
     public int getTargetconfig_id() {
-        return targetconfigid;
+        return targetconfig_id;
     }
 
     public void setTargetconfig_id(int targetconfig_id) {
-        this.targetconfigid = targetconfig_id;
+        this.targetconfig_id = targetconfig_id;
     }
 
     public int getCheckEmployeeId() {

@@ -4,7 +4,6 @@ import com.example.demo.entities.TargetConfigEntity;
 import com.example.demo.exceptions.TargetIDBadRequestException;
 import com.example.demo.exceptions.TargetIDNotFoundException;
 import com.example.demo.repositories.TargetConfigRepository;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
