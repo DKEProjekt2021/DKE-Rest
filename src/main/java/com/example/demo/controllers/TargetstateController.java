@@ -64,7 +64,7 @@ public class TargetstateController {
     }
     //Getter für TYPE (CSV; MYSQL oder LDAP) Feld
     @GetMapping("Targetstate/type/{type}")
-    List <TargetstateEntity> withTargetstateType(@PathVariable Type type) {
+    List <TargetstateEntity> withTargetstateType(@PathVariable String type) {
         return repository.findByType(type);
     }
 

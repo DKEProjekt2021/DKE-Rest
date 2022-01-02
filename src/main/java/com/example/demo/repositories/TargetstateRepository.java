@@ -29,7 +29,7 @@ public interface TargetstateRepository extends JpaRepository<TargetstateEntity, 
     @Transactional
     List removeByActive(int active);
 
-    List<TargetstateEntity> findByType(Type type);
+    List<TargetstateEntity> findByType(String type);
 
     List<TargetstateEntity> findByPort(String port);
 
