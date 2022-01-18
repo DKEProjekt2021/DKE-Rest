@@ -121,6 +121,7 @@ public class EmployeeController {
         return toSave;
     }
 
+
     @PatchMapping("/employee/{id}")
     public EmployeeEntity patchEmployee(@PathVariable int id, @RequestBody EmployeeEntity newEmployeeData) {
         EmployeeEntity emp = repository.findById(id).orElseThrow(() -> new EmployeeIDNotFoundException("Could not find employee with ID: ", id));
