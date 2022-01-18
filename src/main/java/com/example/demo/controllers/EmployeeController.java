@@ -71,7 +71,6 @@ public class EmployeeController {
             throw new EmployeeBadRequestException("SVNR should not be empty!");
         }
         if (employeeEntity.getSVNR().length() != 10 || !employeeEntity.getSVNR().matches("[0-9]{10}")) {
-            System.out.println(employeeEntity.getSVNR().length());
             throw new EmployeeBadRequestException("SVNR formatted incorrectly!");
         }
 
@@ -92,8 +91,8 @@ public class EmployeeController {
         if (ObjectUtils.isEmpty(employeeEntity.getActive())) {
             throw new EmployeeBadRequestException("Active status field should not be empty!");
         }
-        if (employeeEntity.getActive() != 0 && employeeEntity.getActive() != 1) {
-            throw new EmployeeBadRequestException("Only 0 or 1 possible for input");
+        if (employeeEntity.getActive() != 1 && employeeEntity.getActive() != 2) {
+            throw new EmployeeBadRequestException("Only 1 or 2 possible for input");
         }
 
         if (ObjectUtils.isEmpty(employeeEntity.getStart_date())) {
@@ -106,16 +105,18 @@ public class EmployeeController {
             }
         }
 
-
+        employeeEntity.setActive(1);
         employeeEntity.setLastChanged(Instant.now());
-        employeeEntity.generateLoginName(1);
         employeeEntity.generateStartingPassword(Integer.toString(employeeEntity.getEmployeeid()));
-
+        if(employeeEntity.getLogin_name() == null) {
+            employeeEntity.setLogin_name("provisional");
+        }
         //to get the password from the employee
         EmployeeEntity emp =  repository.save(employeeEntity);
+        System.out.println(emp.getLogin_name());
         emp.generateStartingPassword(Integer.toString(emp.getEmployeeid()));
         emp.setPassword(doHashing(employeeEntity.getPassword()));
-        emp.generateLoginName(emp.getEmployeeid());
+        if(emp.getLogin_name() == "provisional") emp.generateLoginName(emp.getEmployeeid());
         EmployeeEntity toSave =  repository.save(emp);
         return toSave;
     }
@@ -138,11 +139,12 @@ public class EmployeeController {
             emp.setLastName(newEmployeeData.getLastName());
         }
 
-        if (newEmployeeData.getActive() == 0 || newEmployeeData.getActive() == 1) {
+        if (newEmployeeData.getActive() == 1 || newEmployeeData.getActive() == 2) {
             emp.setActive(newEmployeeData.getActive());
         }
-        if (newEmployeeData.getActive() != 0 && newEmployeeData.getActive() != 1) {
-            throw new EmployeeBadRequestException("Only 0 or 1 possible for input");
+
+        if (newEmployeeData.getActive() != 1 && newEmployeeData.getActive() != 2 && newEmployeeData.getActive() != 0) {
+            throw new EmployeeBadRequestException("Only 1 or 2 possible for active");
         }
 
         if (newEmployeeData.getDepartmentId() != 0) {
@@ -175,10 +177,12 @@ public class EmployeeController {
         }
 
         if(newEmployeeData.getSVNR() != null) {
-            if (!newEmployeeData.getSVNR().isEmpty()) {
-                throw new EmployeeBadRequestException("Not allowed to change the svnr of an employee!");
+            if (newEmployeeData.getSVNR().length() != 10 || !newEmployeeData.getSVNR().matches("[0-9]{10}")) {
+                throw new EmployeeBadRequestException("SVNR formatted incorrectly!");
             }
+            emp.setSVNR(newEmployeeData.getSVNR());
         }
+
         emp.setLastChanged(Instant.now());
         repository.save(emp);
         return emp;
@@ -235,12 +239,6 @@ public class EmployeeController {
         }
         return "";
     }
-
-
-
-
-
-
 
 }
 

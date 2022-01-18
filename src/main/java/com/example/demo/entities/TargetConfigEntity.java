@@ -34,7 +34,6 @@ public class TargetConfigEntity {
     @Column(name ="check_SVNR")
     private int checkSVNR;
 
-
     public TargetConfigEntity() {
 
     }
