@@ -1,3 +1,4 @@
+//Controller Klasse für die Employee Entity, definiert Methoden zur Datenbankmanipulation hinsichtlich der Employee Tabelle
 package com.example.demo.controllers;
 
 import com.example.demo.exceptions.EmployeeBadRequestException;
@@ -30,6 +31,7 @@ public class EmployeeController {
         return repository.findAll();
     }
 
+    //Gibt alle Mitarbeiter mit dem eingegebenen Vornamen zurück
     @GetMapping("employee/firstName/{firstName}")
     List<EmployeeEntity> withFirstName(@PathVariable String firstName) {
         List<EmployeeEntity> list = repository.findByFirstName(firstName);
@@ -37,11 +39,13 @@ public class EmployeeController {
         return repository.findByFirstName(firstName);
     }
 
+    //Gibt alle Mitarbeiter mit der eingegebenen ID zurück
     @GetMapping("employee/id/{id}")
     EmployeeEntity withId(@PathVariable int id) {
         return repository.findById(id).orElseThrow(() -> new EmployeeIDNotFoundException("No employee with ID: ",id));
     }
 
+    //Gibt alle Mitarbeiter mit dem eingegebenen Nachnamen zurück
     @GetMapping("employee/lastName/{lastName}")
     List<EmployeeEntity> withLastName(@PathVariable String lastName) {
         List<EmployeeEntity> list = repository.findByLastName(lastName);
@@ -49,6 +53,7 @@ public class EmployeeController {
         return repository.findByLastName(lastName);
     }
 
+    //Gibt alle Mitarbeiter mit dem eingegebenen Aktivitätsstatus zurück
     @GetMapping("employee/active/{active}")
     List<EmployeeEntity> areActive(@PathVariable int active) {
         List<EmployeeEntity> list = repository.findByActive(active);
@@ -57,6 +62,7 @@ public class EmployeeController {
         return repository.findByActive(active);
     }
 
+    //Gibt alle Mitarbeiter die in der eingegebenen Abteilung arbeiten zurück
     @GetMapping("employee/department/{department_Id}")
     List<EmployeeEntity> inDepartment(@PathVariable int department_Id) {
         List<EmployeeEntity> list = repository.findByDepartmentId(department_Id);
@@ -64,7 +70,7 @@ public class EmployeeController {
             throw new EmployeeIDNotFoundException("Could not find employees for department: ", department_Id);
         return repository.findByDepartmentId(department_Id);
     }
-
+    //Service-Methode um neue Mitarbeiter anzulegen, überprüft Eingaben auf Formatierung
     @PostMapping("/employee")
     EmployeeEntity newEmployeeEntity(@RequestBody EmployeeEntity employeeEntity) {
         if (ObjectUtils.isEmpty(employeeEntity.getSVNR())) {
@@ -104,23 +110,35 @@ public class EmployeeController {
                 throw new EmployeeBadRequestException("End date should not be before start date");
             }
         }
-
+        //Mitarbeiter die neu angelegt werden werden immer auf Active == 1, also True gesetzt
         employeeEntity.setActive(1);
         employeeEntity.setLastChanged(Instant.now());
         employeeEntity.generateStartingPassword(Integer.toString(employeeEntity.getEmployeeid()));
+
+        /**
+         * wurde kein Loginname manuell vergeben muss dieser auf einen vorrübergehenden Wert gesetzt werden
+         * dies hat den Grund, dass ansonsten ein Fehler durch den Service gemeldet wird da das Loginname Feld nicht
+         * null sein darf.
+         */
         if(employeeEntity.getLogin_name() == null) {
             employeeEntity.setLogin_name("provisional");
         }
-        //to get the password from the employee
-        EmployeeEntity emp =  repository.save(employeeEntity);
-        System.out.println(emp.getLogin_name());
-        emp.generateStartingPassword(Integer.toString(emp.getEmployeeid()));
-        emp.setPassword(doHashing(employeeEntity.getPassword()));
-        if(emp.getLogin_name() == "provisional") emp.generateLoginName(emp.getEmployeeid());
-        EmployeeEntity toSave =  repository.save(emp);
+        //Das anzulegende Employeeobjekt wird hier zwischengespeichert damit der Zugriff auf das Passwort gewährleistet wird
+        //Anschließend wird das Passwort durch die Hashing Methode verschlüsselt und das gesamte Employee Objekt in die DB gespeichert
+        EmployeeEntity temp =  repository.save(employeeEntity);
+        System.out.println(temp.getLogin_name());
+        temp.generateStartingPassword(Integer.toString(temp.getEmployeeid()));
+        temp.setPassword(doHashing(employeeEntity.getPassword()));
+
+        //wurde kein Loginname vergeben wird dieser anhand des Vornamens, Nachnamens und der ID des Mitarbeiter generiert
+        if(temp.getLogin_name() == "provisional") temp.generateLoginName(temp.getEmployeeid());
+        EmployeeEntity toSave =  repository.save(temp);
         return toSave;
     }
 
+    //Service Methode zur Bearbeitung von Mitarbeiter, hiermit können einzelne Felder wie zB nur der Vorname eines Employee
+    //geändert werden, oder auch mehrere Felder aufeinmal
+    //Überprüft Benutzereingaben auf mögliche Falscheingaben
     @PatchMapping("/employee/{id}")
     public EmployeeEntity patchEmployee(@PathVariable int id, @RequestBody EmployeeEntity newEmployeeData) {
         EmployeeEntity emp = repository.findById(id).orElseThrow(() -> new EmployeeIDNotFoundException("Could not find employee with ID: ", id));
@@ -188,17 +206,19 @@ public class EmployeeController {
         return emp;
     }
 
+    //Methode zum Löschen eines Employees anhand dessen ID
     @DeleteMapping("/employee/{id}")
     void deleteEmployee(@PathVariable int id) {
        repository.deleteById(id);
     }
 
-
+    //Methode zum Löschen aller Employees
     @DeleteMapping("/employee")
     void deleteAllEmployees() {
         repository.deleteAll();
     }
 
+    //Methode zum Löschen aller inaktiven Mitarbeiter, also Mitarbeiter mit dem Wert active==2
     @DeleteMapping("employee/inactive/{active}")
     void deleteInactiveEmployees(@PathVariable int active) {
         if (active == 1) {
@@ -211,7 +231,7 @@ public class EmployeeController {
 
 
 
-    //functions for login
+    //Gibt alle Mitarbeiter mit dem eingegebenen Loginnamen zurück
     @GetMapping("employee/loginname/{loginName}")
     List<EmployeeEntity> withUsername(@PathVariable String loginName) {
         List<EmployeeEntity> list = repository.findByLoginName(loginName);
@@ -221,7 +241,7 @@ public class EmployeeController {
     }
 
 
-    //One way hash method for Passwords
+    //Hashing Methode zur Verschlüsselung des Passwortes eines Employee
     public String doHashing(String password){
         try{
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");

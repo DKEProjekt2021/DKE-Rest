@@ -7,12 +7,12 @@ import java.time.Instant;
 import java.util.Objects;
 
 
-//darstellung von einem employee aus der db
+//Java Objekt Darstellung der Employee Tabelle
 @Entity
 @Table(name = "employee")
 public class EmployeeEntity {
 
-
+    //id wird über einen generator automatisch generiert und ist eine fortlaufende nummer
     private @Id @GeneratedValue(strategy  = GenerationType.AUTO, generator = "employeeid_sequence")
     @SequenceGenerator(name = "employeeid_sequence",allocationSize=1)
     int employeeid;

@@ -2,10 +2,12 @@ package com.example.demo.entities;
 
 import javax.persistence.*;
 
+//Java Objekt Darstellung der Targetconfig Tabelle
 @Entity
 @Table(name = "targetconfig")
 public class TargetConfigEntity {
 
+    //id wird über einen generator automatisch generiert und ist eine fortlaufende nummer
     private @Id @GeneratedValue(strategy  = GenerationType.AUTO, generator = "targetid_sequence")
     @SequenceGenerator(name = "targetid_sequence",allocationSize=1)
     int targetconfig_id;
