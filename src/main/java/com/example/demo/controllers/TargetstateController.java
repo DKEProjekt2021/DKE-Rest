@@ -111,46 +111,92 @@ public class TargetstateController {
     //Mapping für das Erstellen eines neuen Targetstates. Active, Active since, last updatedm last synced generieren sich mit dem jeweiligen Datum/Timestamp automatisch und müssen nicht übergeben werden.
     @PostMapping("/Targetstate")
     TargetstateEntity newTargetstateEntity(@RequestBody TargetstateEntity targetstateEntity) {
-        if(ObjectUtils.isEmpty(targetstateEntity.getTargetstateid())) {
-            throw new TargetIDBadRequestException("Targetstate-name should not be empty!");
-        }
-        if(ObjectUtils.isEmpty(targetstateEntity.getTargetconfigid())) {
-            throw new TargetIDBadRequestException("TargetConfig-Id should not be empty!");
-        }
-        if (ObjectUtils.isEmpty(targetstateEntity.getActive())) {
-            throw new TargetIDBadRequestException("Active status field should not be empty!");
-        }
-        if(ObjectUtils.isEmpty(targetstateEntity.getDepartmentid())) {
-            throw new TargetIDBadRequestException("Department-name should not be empty!");
-        }
-        if(ObjectUtils.isEmpty(targetstateEntity.getPort())) {
-            throw new TargetIDBadRequestException("Targetstate-port should not be empty!");
-        }
-        if(ObjectUtils.isEmpty(targetstateEntity.getPath())) {
-            throw new TargetIDBadRequestException("Targetstate-path should not be empty!");
-        }
-        if(ObjectUtils.isEmpty(targetstateEntity.getUser())) {
-            throw new TargetIDBadRequestException("Targetstate-user should not be empty!");
-        }
-        if(ObjectUtils.isEmpty(targetstateEntity.getPassword())) {
-            throw new TargetIDBadRequestException("Targetstate-password should not be empty!");
-        }
-        if(ObjectUtils.isEmpty(targetstateEntity.getHostname())) {
-            throw new TargetIDBadRequestException("Targetstate-hostname should not be empty!");
-        }
         if(ObjectUtils.isEmpty(targetstateEntity.getType())) {
             throw new TargetIDBadRequestException("Targetstate-type should not be empty!");
-        }
-        if(ObjectUtils.isEmpty(targetstateEntity.getTablename())) {
-            throw new TargetIDBadRequestException("Targetstate-Tablename should not be empty!");
+        }else {
+            if (targetstateEntity.getType().equals("LDAP")) {
+                if (ObjectUtils.isEmpty(targetstateEntity.getTargetstateid())) {
+                    throw new TargetIDBadRequestException("Targetstate-name should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getTargetconfigid())) {
+                    throw new TargetIDBadRequestException("TargetConfig-Id should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getDepartmentid())) {
+                    throw new TargetIDBadRequestException("Department-name should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getPort())) {
+                    throw new TargetIDBadRequestException("Targetstate-port should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getUser())) {
+                    throw new TargetIDBadRequestException("Targetstate-user should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getPassword())) {
+                    throw new TargetIDBadRequestException("Targetstate-password should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getHostname())) {
+                    throw new TargetIDBadRequestException("Targetstate-hostname should not be empty!");
+                }
+
+            } else if (targetstateEntity.getType().equals("CSV")) {
+                if (ObjectUtils.isEmpty(targetstateEntity.getTargetstateid())) {
+                    throw new TargetIDBadRequestException("Targetstate-name should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getTargetconfigid())) {
+                    throw new TargetIDBadRequestException("TargetConfig-Id should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getDepartmentid())) {
+                    throw new TargetIDBadRequestException("Department-name should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getPath())) {
+                    throw new TargetIDBadRequestException("Targetstate-path should not be empty!");
+                }
+            } else if (targetstateEntity.getType().equals("JSON")) {
+                if (ObjectUtils.isEmpty(targetstateEntity.getTargetstateid())) {
+                    throw new TargetIDBadRequestException("Targetstate-name should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getTargetconfigid())) {
+                    throw new TargetIDBadRequestException("TargetConfig-Id should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getDepartmentid())) {
+                    throw new TargetIDBadRequestException("Department-name should not be empty!");
+                }
+            } else if (targetstateEntity.getType().equals("MYSQL")) {
+                if (ObjectUtils.isEmpty(targetstateEntity.getTargetstateid())) {
+                    throw new TargetIDBadRequestException("Targetstate-name should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getTargetconfigid())) {
+                    throw new TargetIDBadRequestException("TargetConfig-Id should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getDepartmentid())) {
+                    throw new TargetIDBadRequestException("Department-name should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getPort())) {
+                    throw new TargetIDBadRequestException("Targetstate-port should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getPath())) {
+                    throw new TargetIDBadRequestException("Targetstate-path should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getUser())) {
+                    throw new TargetIDBadRequestException("Targetstate-user should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getPassword())) {
+                    throw new TargetIDBadRequestException("Targetstate-password should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getHostname())) {
+                    throw new TargetIDBadRequestException("Targetstate-hostname should not be empty!");
+                }
+                if (ObjectUtils.isEmpty(targetstateEntity.getTablename())) {
+                    throw new TargetIDBadRequestException("Targetstate-Tablename should not be empty!");
+                }
+            }
         }
         java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
         targetstateEntity.setActive(1);
         targetstateEntity.setActivesince(date);
         targetstateEntity.setLastupdated(date);
-        long now = System.currentTimeMillis();
-        Timestamp sqlTimestamp = new Timestamp(now);
-        targetstateEntity.setLast_synced(sqlTimestamp);
+        //long now = System.currentTimeMillis();
+        //Timestamp sqlTimestamp = new Timestamp(now);
+        //targetstateEntity.setLast_synced(sqlTimestamp);
         return repository.save(targetstateEntity);
     }
 
@@ -171,11 +217,10 @@ public class TargetstateController {
         emp.setActive(newEmployeeData.getActive());
         java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
         emp.setLastupdated(date);
-        long now = System.currentTimeMillis();
-        Timestamp sqlTimestamp = new Timestamp(now);
-        emp.setLast_synced(sqlTimestamp);
         if(emp.getActive()==1){
             emp.setActivesince(date);
+        }else{
+            emp.setActivesince(null);
         }
         repository.save(emp);
         return emp;
