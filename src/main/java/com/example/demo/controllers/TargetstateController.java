@@ -124,6 +124,9 @@ public class TargetstateController {
                 if (ObjectUtils.isEmpty(targetstateEntity.getDepartmentid())) {
                     throw new TargetIDBadRequestException("Department-name should not be empty!");
                 }
+                if (ObjectUtils.isEmpty(targetstateEntity.getPath())) {
+                    throw new TargetIDBadRequestException("Targetstate-path should not be empty!");
+                }
                 if (ObjectUtils.isEmpty(targetstateEntity.getPort())) {
                     throw new TargetIDBadRequestException("Targetstate-port should not be empty!");
                 }
