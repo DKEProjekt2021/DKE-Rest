@@ -153,14 +153,14 @@ public class EmployeeController {
         EmployeeEntity emp = repository.findById(id).orElseThrow(() -> new EmployeeIDNotFoundException("Could not find employee with ID: ", id));
 
         if (newEmployeeData.getFirstName() != null) {
-            if(!newEmployeeData.getFirstName().matches("[a-zA-Z]*")) {
+            if(!newEmployeeData.getFirstName().matches("[a-zA-Z]+")) {
                 throw new EmployeeBadRequestException("First name incorrectly formatted!");
             }
             emp.setFirstName(newEmployeeData.getFirstName());
         }
 
         if (newEmployeeData.getLastName() != null) {
-            if(!newEmployeeData.getLastName().matches("[a-zA-Z]*")) {
+            if(!newEmployeeData.getLastName().matches("[a-zA-Z]+")) {
                 throw new EmployeeBadRequestException("Last name incorrectly formatted!");
             }
             emp.setLastName(newEmployeeData.getLastName());
