@@ -122,7 +122,7 @@ public class EmployeeController {
          * dies hat den Grund, dass ansonsten ein Fehler durch den Service gemeldet wird da das Loginname Feld nicht
          * null sein darf.
          */
-        if(employeeEntity.getLogin_name() == null) {
+        if(employeeEntity.getLogin_name() == null || employeeEntity.getLogin_name().isEmpty()) {
             employeeEntity.setLogin_name("provisional");
         }
         //Das anzulegende Employeeobjekt wird hier zwischengespeichert damit der Zugriff auf das Passwort gewährleistet wird
@@ -179,6 +179,9 @@ public class EmployeeController {
         }
 
         if (newEmployeeData.getLogin_name() != null) {
+            if(!newEmployeeData.getLogin_name().matches("[A-Za-z0-9]+")) {
+                throw new EmployeeBadRequestException("Login name should not be empty");
+            }
             emp.setLogin_name(newEmployeeData.getLogin_name());
         }
         if (newEmployeeData.getPassword() != null) {
