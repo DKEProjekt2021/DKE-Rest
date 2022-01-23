@@ -204,20 +204,40 @@ public class TargetstateController {
     }
 
     //PatchMapping = Updaten oder Put Mapping(komplett ersetzen jedes Feld wird neu angelegt)
-    //Mit diesem Mapping können bestehende Targetstates über ihre Targetstate ID abgeändert werden. Autogenerierende werte wie Lastsynced oder last_updated generieren sich hierbei wieder automatisch je nach Zeit/Datum bei einer Änderung.
+    //Mit diesem Mapping können bestehende Targetstates über ihre Targetstate ID abgeändert werden. Autogenerierende werte wie last_updated generieren sich hierbei wieder automatisch je nach Zeit/Datum bei einer Änderung.
     @PatchMapping("/Targetstate/{id}")
     public TargetstateEntity patchTargetstate(@PathVariable int id, @RequestBody TargetstateEntity newEmployeeData) {
         TargetstateEntity emp = repository.findByTargetstateid(id);
-        emp.setDepartmentid(newEmployeeData.getDepartmentid());
-        emp.setTargetconfigid(newEmployeeData.getTargetconfigid());
-        emp.setType(newEmployeeData.getType());
-        emp.setPort(newEmployeeData.getPort());
-        emp.setPath(newEmployeeData.getPath());
-        emp.setUser(newEmployeeData.getUser());
-        emp.setPassword(newEmployeeData.getPassword());
-        emp.setHostname(newEmployeeData.getHostname());
-        emp.setTablename(newEmployeeData.getTablename());
-        emp.setActive(newEmployeeData.getActive());
+        if(newEmployeeData.getDepartmentid() != 0){
+            emp.setDepartmentid(newEmployeeData.getDepartmentid());
+        }
+        if(newEmployeeData.getType()!=null){
+            emp.setType(newEmployeeData.getType());
+        }
+        if(newEmployeeData.getTargetconfigid() != 0) {
+            emp.setTargetconfigid(newEmployeeData.getTargetconfigid());
+        }
+        if(newEmployeeData.getPath() != null){
+            emp.setPath(newEmployeeData.getPath());
+        }
+        if(newEmployeeData.getPort() != null){
+            emp.setPort(newEmployeeData.getPort());
+        }
+        if(newEmployeeData.getUser() != null){
+            emp.setUser(newEmployeeData.getUser());
+        }
+        if(newEmployeeData.getPassword() != null){
+            emp.setPassword(newEmployeeData.getPassword());
+        }
+        if(newEmployeeData.getHostname() != null){
+            emp.setHostname(newEmployeeData.getHostname());
+        }
+        if(newEmployeeData.getTablename() != null){
+            emp.setTablename(newEmployeeData.getTablename());
+        }
+        if(newEmployeeData.getActive() != 0){
+            emp.setActive(newEmployeeData.getActive());
+        }
         java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
         emp.setLastupdated(date);
         if(emp.getActive()==1){
