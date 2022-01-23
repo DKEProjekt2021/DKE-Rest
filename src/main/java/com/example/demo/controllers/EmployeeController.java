@@ -179,7 +179,7 @@ public class EmployeeController {
         }
 
         if (newEmployeeData.getLogin_name() != null) {
-            if(!newEmployeeData.getLogin_name().matches("[A-Za-z0-9]+")) {
+            if(!newEmployeeData.getLogin_name().matches(".+")) {
                 throw new EmployeeBadRequestException("Login name should not be empty");
             }
             emp.setLogin_name(newEmployeeData.getLogin_name());
