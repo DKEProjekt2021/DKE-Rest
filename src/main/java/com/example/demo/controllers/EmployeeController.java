@@ -110,10 +110,12 @@ public class EmployeeController {
                 throw new EmployeeBadRequestException("End date should not be before start date");
             }
         }
-        //Mitarbeiter die neu angelegt werden werden immer auf Active == 1, also True gesetzt
-        employeeEntity.setActive(1);
+
         employeeEntity.setLastChanged(Instant.now());
-        employeeEntity.generateStartingPassword(Integer.toString(employeeEntity.getEmployeeid()));
+
+        if(employeeEntity.getPassword() == null) {
+            employeeEntity.setPassword("nopasswordgiven");
+        }
 
         /**
          * wurde kein Loginname manuell vergeben muss dieser auf einen vorrübergehenden Wert gesetzt werden
@@ -126,12 +128,19 @@ public class EmployeeController {
         //Das anzulegende Employeeobjekt wird hier zwischengespeichert damit der Zugriff auf das Passwort gewährleistet wird
         //Anschließend wird das Passwort durch die Hashing Methode verschlüsselt und das gesamte Employee Objekt in die DB gespeichert
         EmployeeEntity temp =  repository.save(employeeEntity);
-        System.out.println(temp.getLogin_name());
-        temp.generateStartingPassword(Integer.toString(temp.getEmployeeid()));
-        temp.setPassword(doHashing(employeeEntity.getPassword()));
+
 
         //wurde kein Loginname vergeben wird dieser anhand des Vornamens, Nachnamens und der ID des Mitarbeiter generiert
-        if(temp.getLogin_name() == "provisional") temp.generateLoginName(temp.getEmployeeid());
+        if(temp.getLogin_name() == "provisional") {
+            temp.generateLoginName(temp.getEmployeeid());
+        }
+
+        if(temp.getPassword() == "nopasswordgiven") {
+            temp.generateStartingPassword(Integer.toString(temp.getEmployeeid()));
+        }
+
+        temp.setPassword(doHashing(employeeEntity.getPassword()));
+
         EmployeeEntity toSave =  repository.save(temp);
         return toSave;
     }
