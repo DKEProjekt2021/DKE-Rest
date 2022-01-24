@@ -160,6 +160,9 @@ public class TargetstateController {
                 if (ObjectUtils.isEmpty(targetstateEntity.getTargetconfigid())) {
                     throw new TargetIDBadRequestException("TargetConfig-Id should not be empty!");
                 }
+                if (ObjectUtils.isEmpty(targetstateEntity.getPath())) {
+                    throw new TargetIDBadRequestException("Targetstate-path should not be empty!");
+                }
                 if (ObjectUtils.isEmpty(targetstateEntity.getDepartmentid())) {
                     throw new TargetIDBadRequestException("Department-name should not be empty!");
                 }
