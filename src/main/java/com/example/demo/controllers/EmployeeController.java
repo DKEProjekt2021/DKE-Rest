@@ -6,6 +6,7 @@ import com.example.demo.entities.EmployeeEntity;
 import com.example.demo.exceptions.EmployeeForbiddenRequest;
 import com.example.demo.exceptions.EmployeeIDNotFoundException;
 import com.example.demo.exceptions.EmployeeRequestNotFoundException;
+import com.example.demo.repositories.DepartmentRepository;
 import com.example.demo.repositories.EmployeeRepository;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -83,14 +84,14 @@ public class EmployeeController {
         if (ObjectUtils.isEmpty(employeeEntity.getFirstName())) {
             throw new EmployeeBadRequestException("Firstname should not be empty!");
         }
-        if (!employeeEntity.getFirstName().matches("[a-zA-Z]*")) {
+        if (!employeeEntity.getFirstName().matches("[A-Za-z\s-\\.]+")) {
             throw new EmployeeBadRequestException("First name incorrectly formatted!");
         }
 
         if (ObjectUtils.isEmpty(employeeEntity.getLastName())) {
             throw new EmployeeBadRequestException("Lastname should not be empty!");
         }
-        if (!employeeEntity.getLastName().matches("[a-zA-Z]*")) {
+        if (!employeeEntity.getLastName().matches("[A-Za-z\s-\\.]+")) {
             throw new EmployeeBadRequestException("Last name incorrectly formatted!");
         }
 
@@ -103,6 +104,10 @@ public class EmployeeController {
 
         if (ObjectUtils.isEmpty(employeeEntity.getStart_date())) {
             throw new EmployeeBadRequestException("Start date field should not be empty!");
+        }
+
+        if(ObjectUtils.isEmpty(employeeEntity.getDepartmentId()) || employeeEntity.getDepartmentId() == 0) {
+            throw new EmployeeBadRequestException("Department field should not be empty!");
         }
 
         if(employeeEntity.getEnd_date() != null) {
@@ -153,14 +158,14 @@ public class EmployeeController {
         EmployeeEntity emp = repository.findById(id).orElseThrow(() -> new EmployeeIDNotFoundException("Could not find employee with ID: ", id));
 
         if (newEmployeeData.getFirstName() != null) {
-            if(!newEmployeeData.getFirstName().matches("[a-zA-Z]+")) {
+            if(!newEmployeeData.getFirstName().matches("[A-Za-z\s-\\.]+")) {
                 throw new EmployeeBadRequestException("First name incorrectly formatted!");
             }
             emp.setFirstName(newEmployeeData.getFirstName());
         }
 
         if (newEmployeeData.getLastName() != null) {
-            if(!newEmployeeData.getLastName().matches("[a-zA-Z]+")) {
+            if(!newEmployeeData.getLastName().matches("[A-Za-z\s-\\.]+")) {
                 throw new EmployeeBadRequestException("Last name incorrectly formatted!");
             }
             emp.setLastName(newEmployeeData.getLastName());

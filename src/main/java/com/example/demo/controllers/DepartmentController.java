@@ -47,7 +47,7 @@ public class DepartmentController {
         if(ObjectUtils.isEmpty(departmentEntity.getName())) {
             throw new DepartmentBadRequestException("Department-name should not be empty!");
         }
-        if(!departmentEntity.getName().matches ("\\w+\\.?")) {
+        if(!departmentEntity.getName().matches ("[0-9A-Za-z\s-\\.]+")) {
             throw new DepartmentBadRequestException("First name in-correctly formatted!");
         }
         return repository.save(departmentEntity);
