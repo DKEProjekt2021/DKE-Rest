@@ -41,7 +41,6 @@ public class DepartmentController {
     List <DepartmentEntity> areActive(@PathVariable int departmentId) {
         return repository.findByDepartmentId(departmentId);
     }
-
     @PostMapping("/departments")
     DepartmentEntity newDepartmentEntity(@RequestBody DepartmentEntity departmentEntity) {
         if(ObjectUtils.isEmpty(departmentEntity.getName())) {
