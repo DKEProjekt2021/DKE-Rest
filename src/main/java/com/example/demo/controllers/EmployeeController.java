@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -75,7 +72,9 @@ public class EmployeeController {
             throw new EmployeeIDNotFoundException("Could not find employees for department: ", department_Id);
         return repository.findByDepartmentId(department_Id);
     }
-    //Service-Methode um neue Mitarbeiter anzulegen, überprüft Eingaben auf Formatierung
+
+    //Service-Methode um neue Mitarbeiter anzulegen, überprüft Eingaben auf Falscheingaben des Benutzers
+    //Die Login_name und password Felder eines Mitarbeiters werden bei Nichteingabe automatisch generiert
     @PostMapping("/employee")
     EmployeeEntity newEmployeeEntity(@RequestBody EmployeeEntity employeeEntity) {
         if (ObjectUtils.isEmpty(employeeEntity.getSVNR())) {
@@ -121,7 +120,6 @@ public class EmployeeController {
         }
 
         employeeEntity.setLastChanged(Instant.now());
-
 
 
         /**
