@@ -6,7 +6,6 @@ import com.example.demo.entities.EmployeeEntity;
 import com.example.demo.exceptions.EmployeeForbiddenRequest;
 import com.example.demo.exceptions.EmployeeIDNotFoundException;
 import com.example.demo.exceptions.EmployeeRequestNotFoundException;
-import com.example.demo.repositories.DepartmentRepository;
 import com.example.demo.repositories.EmployeeRepository;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -22,6 +24,8 @@ import java.util.List;
 public class EmployeeController {
 
     private final EmployeeRepository repository;
+
+
 
     EmployeeController(EmployeeRepository repository) {
         this.repository = repository;
@@ -84,14 +88,14 @@ public class EmployeeController {
         if (ObjectUtils.isEmpty(employeeEntity.getFirstName())) {
             throw new EmployeeBadRequestException("Firstname should not be empty!");
         }
-        if (!employeeEntity.getFirstName().matches("[A-Za-z\s-\\.]+")) {
+        if (!employeeEntity.getFirstName().matches("[A-Z][A-Za-z\s-\\.]*")) {
             throw new EmployeeBadRequestException("First name incorrectly formatted!");
         }
 
         if (ObjectUtils.isEmpty(employeeEntity.getLastName())) {
             throw new EmployeeBadRequestException("Lastname should not be empty!");
         }
-        if (!employeeEntity.getLastName().matches("[A-Za-z\s-\\.]+")) {
+        if (!employeeEntity.getLastName().matches("[A-Z][A-Za-z\s-\\.]*")) {
             throw new EmployeeBadRequestException("Last name incorrectly formatted!");
         }
 
@@ -118,33 +122,40 @@ public class EmployeeController {
 
         employeeEntity.setLastChanged(Instant.now());
 
-        if(employeeEntity.getPassword() == null) {
-            employeeEntity.setPassword("nopasswordgiven");
+
+
+        /**
+         * wurde kein Loginname oder Passwort manuell vergeben müssen diese auf einen vorübergehenden Wert gesetzt werden
+         * Dies hat den Grund, dass ansonsten ein Fehler durch den Service gemeldet wird da die Loginname und password Felder nicht
+         * null sein dürfen.
+         */
+        if(employeeEntity.getLogin_name() == null || employeeEntity.getLogin_name().isBlank()) {
+            employeeEntity.setLogin_name("no_login_name_entered_by_user");
+        }
+        if(employeeEntity.getPassword() == null || employeeEntity.getPassword().isBlank()) {
+            employeeEntity.setPassword("no_password_entered_by_user");
         }
 
         /**
-         * wurde kein Loginname manuell vergeben muss dieser auf einen vorrübergehenden Wert gesetzt werden
-         * dies hat den Grund, dass ansonsten ein Fehler durch den Service gemeldet wird da das Loginname Feld nicht
-         * null sein darf.
-         */
-        if(employeeEntity.getLogin_name() == null || employeeEntity.getLogin_name().isEmpty()) {
-            employeeEntity.setLogin_name("provisional");
-        }
-        //Das anzulegende Employeeobjekt wird hier zwischengespeichert damit der Zugriff auf das Passwort gewährleistet wird
-        //Anschließend wird das Passwort durch die Hashing Methode verschlüsselt und das gesamte Employee Objekt in die DB gespeichert
+         Das anzulegende Employeeobjekt wird hier zwischengespeichert damit der Zugriff auf die benötigten Information das Passwort gewährleistet wird
+         würde man dieses Objekt nicht zwischenspeichern hätte man keinen Zugriff auf die EmployeeId zur Generierung des Loginnamen und Passwortes
+         Anschließend wird das Passwort durch die Hashing Methode verschlüsselt und das gesamte Employee Objekt in die DB gespeichert
+         **/
         EmployeeEntity temp =  repository.save(employeeEntity);
 
 
         //wurde kein Loginname vergeben wird dieser anhand des Vornamens, Nachnamens und der ID des Mitarbeiter generiert
-        if(temp.getLogin_name() == "provisional") {
+        if(temp.getLogin_name() == "no_login_name_entered_by_user") {
             temp.generateLoginName(temp.getEmployeeid());
         }
 
-        if(temp.getPassword() == "nopasswordgiven") {
+        //wurde kein Passwort vergeben wird dieses anhand des Vornamens, Nachnamens und der ID des Mitarbeiter generiert
+        if(temp.getPassword() == "no_password_entered_by_user") {
             temp.generateStartingPassword(Integer.toString(temp.getEmployeeid()));
         }
 
-        temp.setPassword(doHashing(employeeEntity.getPassword()));
+        //Hier wird das Passwort mit einem Hash Wert versehen
+         temp.setPassword(doHashing(employeeEntity.getPassword()));
 
         EmployeeEntity toSave =  repository.save(temp);
         return toSave;
@@ -158,14 +169,14 @@ public class EmployeeController {
         EmployeeEntity emp = repository.findById(id).orElseThrow(() -> new EmployeeIDNotFoundException("Could not find employee with ID: ", id));
 
         if (newEmployeeData.getFirstName() != null) {
-            if(!newEmployeeData.getFirstName().matches("[A-Za-z\s-\\.]+")) {
+            if(!newEmployeeData.getFirstName().matches("[A-Z][A-Za-z\s-\\.]*")) {
                 throw new EmployeeBadRequestException("First name incorrectly formatted!");
             }
             emp.setFirstName(newEmployeeData.getFirstName());
         }
 
         if (newEmployeeData.getLastName() != null) {
-            if(!newEmployeeData.getLastName().matches("[A-Za-z\s-\\.]+")) {
+            if(!newEmployeeData.getLastName().matches("[A-Z][A-Za-z\s-\\.]*")) {
                 throw new EmployeeBadRequestException("Last name incorrectly formatted!");
             }
             emp.setLastName(newEmployeeData.getLastName());
@@ -184,12 +195,12 @@ public class EmployeeController {
         }
 
         if (newEmployeeData.getLogin_name() != null) {
-            if(!newEmployeeData.getLogin_name().matches(".+")) {
+            if(newEmployeeData.getLogin_name().isBlank()) {
                 throw new EmployeeBadRequestException("Login name should not be empty");
             }
             emp.setLogin_name(newEmployeeData.getLogin_name());
         }
-        if (newEmployeeData.getPassword() != null) {
+        if (newEmployeeData.getPassword() != null && !newEmployeeData.getPassword().isBlank()) {
             emp.setPassword(doHashing(newEmployeeData.getPassword()));
         }
         if (newEmployeeData.getStart_date() != null) {
@@ -223,10 +234,11 @@ public class EmployeeController {
         return emp;
     }
 
+
     //Methode zum Löschen eines Employees anhand dessen ID
     @DeleteMapping("/employee/{id}")
     void deleteEmployee(@PathVariable int id) {
-       repository.deleteById(id);
+        repository.deleteById(id);
     }
 
     //Methode zum Löschen aller Employees
