@@ -109,6 +109,7 @@ public class TargetstateController {
         return repository.findByLastsynced(lastsynced);
     }
     //Mapping für das Erstellen eines neuen Targetstates. Active, Active since, last updatedm last synced generieren sich mit dem jeweiligen Datum/Timestamp automatisch und müssen nicht übergeben werden.
+    //Je nach Targetstate Type werden verschiedene Elemente zur Erstellung eines Targetstates verlangt. Jeder Typ benötigt andere Variablen.
     @PostMapping("/Targetstate")
     TargetstateEntity newTargetstateEntity(@RequestBody TargetstateEntity targetstateEntity) {
         if(ObjectUtils.isEmpty(targetstateEntity.getType())) {
@@ -196,6 +197,7 @@ public class TargetstateController {
                 }
             }
         }
+        //Bei erstellung eines Targetstates wird dieser automatisch auf Active gesetzt. Ebenfalls wird active since und last updated auf das heutige Datum gesetzt.
         java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
         targetstateEntity.setActive(1);
         targetstateEntity.setActivesince(date);
