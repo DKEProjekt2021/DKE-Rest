@@ -121,7 +121,6 @@ public class EmployeeController {
 
         employeeEntity.setLastChanged(Instant.now());
 
-
         /**
          * wurde kein Loginname oder Passwort manuell vergeben müssen diese auf einen vorübergehenden Wert gesetzt werden
          * Dies hat den Grund, dass ansonsten ein Fehler durch den Service gemeldet wird da die Loginname und password Felder nicht
@@ -141,7 +140,6 @@ public class EmployeeController {
          **/
         EmployeeEntity temp =  repository.save(employeeEntity);
 
-
         //wurde kein Loginname vergeben wird dieser anhand des Vornamens, Nachnamens und der ID des Mitarbeiter generiert
         if(temp.getLogin_name() == "no_login_name_entered_by_user") {
             temp.generateLoginName(temp.getEmployeeid());
@@ -159,9 +157,14 @@ public class EmployeeController {
         return toSave;
     }
 
-    //Service Methode zur Bearbeitung von Mitarbeiter, hiermit können einzelne Felder wie zB nur der Vorname eines Employee
-    //geändert werden, oder auch mehrere Felder aufeinmal
-    //Überprüft Benutzereingaben auf mögliche Falscheingaben
+    /**
+     * Service Methode zur Bearbeitung von Mitarbeiter, hiermit können einzelne Felder wie zB nur der Vorname eines Employees
+     * geändert werden, oder auch mehrere Felder aufeinmal
+     * Überprüft Benutzereingaben auf mögliche Falscheingaben
+     * @param id des zu änderenden Employee Objekts
+     * @param newEmployeeData Employee Objekt, Variablen Werte dieses Objekts werden für die Änderungen an dem gewünschten Employee verwendet
+     * @return
+     */
     @PatchMapping("/employee/{id}")
     public EmployeeEntity patchEmployee(@PathVariable int id, @RequestBody EmployeeEntity newEmployeeData) {
         EmployeeEntity emp = repository.findById(id).orElseThrow(() -> new EmployeeIDNotFoundException("Could not find employee with ID: ", id));

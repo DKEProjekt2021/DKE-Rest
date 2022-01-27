@@ -36,6 +36,9 @@ public class TargetConfigEntity {
     @Column(name ="check_SVNR")
     private int checkSVNR;
 
+    @Column(name ="description")
+    private String description;
+
     public TargetConfigEntity() {
 
     }
@@ -55,8 +58,6 @@ public class TargetConfigEntity {
     public void setCheckEmployeeId(int checkEmployeeId) {
         this.checkEmployeeId = checkEmployeeId;
     }
-
-
 
     public int getCheckLastName() {
         return checkLastName;
@@ -114,4 +115,13 @@ public class TargetConfigEntity {
     public void setCheckSVNR(int checkSVNR) {
         this.checkSVNR = checkSVNR;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }
