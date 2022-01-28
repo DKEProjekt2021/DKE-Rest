@@ -126,7 +126,7 @@ public class TargetConfigController {
 
     //Service Methode zum Löschen von Targetconfigs
     @DeleteMapping("/targetconfig/delete/{id}")
-    void deleteDepartment(@PathVariable int id) {
+    void deleteTargetConfig(@PathVariable int id) {
         repository.deleteById(id);
     }
 
