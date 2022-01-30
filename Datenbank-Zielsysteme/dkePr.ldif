@@ -1,0 +1,10 @@
+dn: dc=dkePr,dc=at
+objectClass: domain
+objectClass: top
+dc: dkePr
+
+dn: ou=People,dc=dkePr,dc=at
+objectclass: top
+objectclass: organizationalUnit
+ou: People
+description: Container for user entries
